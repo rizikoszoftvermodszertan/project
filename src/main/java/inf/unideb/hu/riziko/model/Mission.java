@@ -1,0 +1,18 @@
+package inf.unideb.hu.riziko.model;
+
+public enum Mission {
+    CONQUER_EUR_AUS_PLUS_ONE,
+    CONQUER_EUR_SA_PLUS_ONE,
+    CONQUER_NA_AFR,
+    CONQUER_NA_AUS,
+    CONQUER_ASIA_SA,
+    CONQUER_ASIA_AFR,
+    CONQUER_24,
+    CONQUER_18_AND_FORTIFY,
+    KILL_PLAYER1,
+    KILL_PLAYER2,
+    KILL_PLAYER3,
+    KILL_PLAYER4,
+    KILL_PLAYER5,
+    KILL_PLAYER6
+}
