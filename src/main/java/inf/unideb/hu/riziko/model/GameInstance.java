@@ -1,5 +1,7 @@
 package inf.unideb.hu.riziko.model;
 
+import java.util.ArrayList;
+
 public class GameInstance {
     public enum GamePhase {
         SETUP,
@@ -8,7 +10,8 @@ public class GameInstance {
     }
     GamePhase GamePhase;
     GameMode GameMode;
-
     GameBoard GameBoard;
-    Player[] Players;
+    ArrayList<Player> Players;
+    ArrayList<Turn> GameHistory;
+    Turn CurrentTurn;
 }
