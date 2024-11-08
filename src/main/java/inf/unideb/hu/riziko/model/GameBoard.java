@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * Adjacencies: A szomszédos területeket páronként listázza, a Territories indexe szerint.
  */
 public class GameBoard {
-    ArrayList<Territory> Territories;
-    ArrayList<Continent> Continents;
-    ArrayList<Pair<Integer,Integer>> Adjacencies;
+    ArrayList<Territory> territories;
+    ArrayList<Continent> continents;
+    ArrayList<Pair<Integer,Integer>> adjacencies;
 }

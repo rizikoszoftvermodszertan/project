@@ -8,10 +8,9 @@ public class GameInstance {
         GAMEPLAY,
         FINISHED
     }
-    GamePhase GamePhase;
-    GameMode GameMode;
-    GameBoard GameBoard;
-    ArrayList<Player> Players;
-    ArrayList<Turn> GameHistory;
-    Turn CurrentTurn;
+    GamePhase gamePhase;
+    GameMode gameMode;
+    GameBoard gameBoard;
+    ArrayList<Player> players;
+    Turn currentTurn;
 }
