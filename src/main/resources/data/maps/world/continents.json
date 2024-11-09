@@ -1,0 +1,32 @@
+[
+  {
+    "Name": "North America",
+    "Territories": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    "ArmyBonus": 5
+  },
+  {
+    "Name": "Europe",
+    "Territories": [9, 10, 11, 12, 13, 14, 15],
+    "ArmyBonus": 5
+  },
+  {
+    "Name": "Asia",
+    "Territories": [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27],
+    "ArmyBonus": 7
+  },
+  {
+    "Name": "South America",
+    "Territories": [28, 29, 30, 31],
+    "ArmyBonus": 2
+  },
+  {
+    "Name": "Africa",
+    "Territories": [32, 33, 34, 35, 36, 37],
+    "ArmyBonus": 3
+  },
+  {
+    "Name": "Oceania",
+    "Territories": [38, 39, 40, 41],
+    "ArmyBonus": 2
+  }
+]
