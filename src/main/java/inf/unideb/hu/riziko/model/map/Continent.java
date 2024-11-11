@@ -10,11 +10,18 @@ import java.util.ArrayList;
  */
 public class Continent {
     @NonNull
-    String name;
+    final String name;
     @NonNull
-    ArrayList<Integer> territoryIDs;
+    final ArrayList<Integer> territoryIDs;
     @NonNull
-    Integer armyBonus;
+    final Integer armyBonus;
     @NonNull
     PlayerID owner;
+
+    public Continent(String name, ArrayList<Integer> territoryIDs, Integer armyBonus) {
+        this.name = name;
+        this.territoryIDs = territoryIDs;
+        this.armyBonus = armyBonus;
+        owner = PlayerID.NEUTRAL;
+    }
 }
