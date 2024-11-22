@@ -11,7 +11,6 @@ import java.util.ArrayList;
  * Játékos. Rendelkezik ID-val, játékmód szerint titkos küldetéssel vagy főhadiszállással, illetve kártyákkal.
  */
 @ToString
-@AllArgsConstructor
 public class Player {
     @Getter
     PlayerID ID;
