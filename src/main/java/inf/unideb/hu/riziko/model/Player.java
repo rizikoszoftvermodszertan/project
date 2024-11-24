@@ -13,10 +13,21 @@ import java.util.ArrayList;
 @ToString
 public class Player {
     @Getter
-    PlayerID ID;
+    private final PlayerID ID;
     @Getter
-    Territory HQLocation; //Csak a Capital játékmódban!
+    private final Territory HQLocation; //Csak a Capital játékmódban!
     @Getter
-    Mission mission; //Csak a Secret Mission játékmódban!
+    private final Mission mission; //Csak a Secret Mission játékmódban!
     ArrayList<TerritoryCard> cards;
+
+    public Player(PlayerID ID, Territory HQLocation, Mission mission) {
+        this.ID = ID;
+        this.HQLocation = HQLocation;
+        this.mission = mission;
+        this.cards = new ArrayList<>();
+    }
+
+    public void addCard(TerritoryCard territoryCard) {
+        cards.add(territoryCard);
+    }
 }

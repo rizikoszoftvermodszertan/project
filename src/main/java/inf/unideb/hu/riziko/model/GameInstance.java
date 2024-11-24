@@ -11,13 +11,13 @@ public class GameInstance {
         FINISHED
     }
     @Getter
-    GamePhase gamePhase;
+    private GamePhase gamePhase;
     @Getter
-    GameMode gameMode;
+    private GameMode gameMode;
     @Getter
-    GameBoard gameBoard;
+    private GameBoard gameBoard;
     @Getter
-    ArrayList<Player> players;
+    private ArrayList<Player> players;
     @Getter
-    Turn currentTurn;
+    private Turn currentTurn;
 }

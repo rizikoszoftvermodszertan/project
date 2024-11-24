@@ -1,5 +1,7 @@
 package inf.unideb.hu.riziko.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.ToString;
 
 /**
@@ -8,6 +10,7 @@ import lombok.ToString;
  * Ha a beváltó játékos birtokol legalább egy területet, ami a beváltott kártyákon szerepel, akkor kap 2 extra sereget.
  */
 @ToString
+@AllArgsConstructor
 public class TerritoryCard {
     enum CardDesign {
         INFANTRY,
@@ -15,6 +18,8 @@ public class TerritoryCard {
         ARTILLERY,
         WILD
     }
-    CardDesign design;
-    Integer territoryID; //Ha WILD kártya, akkor ez NULL!!!
+    @Getter
+    private final CardDesign design;
+    @Getter
+    private final String territoryID; //Ha WILD kártya, akkor ez NULL!!!
 }
