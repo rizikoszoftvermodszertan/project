@@ -4,6 +4,8 @@ import inf.unideb.hu.riziko.datastructures.UnorderedPair;
 import inf.unideb.hu.riziko.model.map.Continent;
 import inf.unideb.hu.riziko.model.map.Territory;
 import lombok.Getter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,7 +18,7 @@ import java.util.HashSet;
  */
 
 public class GameBoard {
-
+    private final Logger logger = LogManager.getLogger(GameBoard.class.getName());
     @Getter
     private final HashMap<String, Territory> territories;
     @Getter
@@ -24,7 +26,7 @@ public class GameBoard {
     @Getter
     private final HashSet<UnorderedPair<String>> adjacencies;
 
-    public GameBoard(HashMap<String, Territory> territories, HashSet<Continent> continents, HashSet<UnorderedPair<String>> adjacencies) {
+    public GameBoard(HashMap<String, Territory> territories,  HashSet<Continent> continents, HashSet<UnorderedPair<String>> adjacencies) {
         this.territories = territories;
         this.continents = continents;
         this.adjacencies = adjacencies;
@@ -32,6 +34,18 @@ public class GameBoard {
 
     public Territory findTerritoryByName(String name) {
         return territories.get(name);
+    }
+
+    public Continent findContinentByTerritoryName(String territoryName) {
+        try {
+            return continents.stream()
+                    .filter(continent -> continent.getTerritories().contains(territoryName))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Territory name not found in any continent!"));
+        } catch (Exception e) {
+            logger.error("Error finding continent by territory name: ", e);
+            throw e;
+        }
     }
 
     /**
@@ -57,5 +71,20 @@ public class GameBoard {
 
     public boolean isAdjacent(String territory1, String territory2) {
         return adjacencies.contains(new UnorderedPair<String>(territory1,territory2));
+    }
+
+    /**
+     * Megváltoztatja a tartomány tulajdonosát, úgy, hogy a kontinens tulajdonát ellenőrzi.
+     * @param province Az elfoglalni kívánt tartomány
+     * @param player Az elfoglaló játékos
+     */
+    public void changeProvinceOwner(String province, PlayerID player) {
+        try {
+            territories.get(province).setOwner(player);
+            updateContinentOwner(findContinentByTerritoryName(province));
+        }
+        catch (Exception e) {
+            logger.error(e.toString());
+        }
     }
 }
