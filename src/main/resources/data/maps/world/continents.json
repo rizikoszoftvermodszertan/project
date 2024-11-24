@@ -1,32 +1,32 @@
 [
   {
     "Name": "North America",
-    "Territories": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    "Territories": ["Territory_Alaska", "Territory_NWT", "Territory_NWT", "Territory_Alberta", "Territory_Ontario", "Territory_Quebec", "Territory_Western_US", "Territory_Eastern_US", "Territory_Central_America"],
     "ArmyBonus": 5
   },
   {
     "Name": "Europe",
-    "Territories": [9, 10, 11, 12, 13, 14, 15],
+    "Territories": ["Territory_Iceland", "Territory_Scandinavia", "Territory_Ukraine", "Territory_Great_Britain", "Territory_Northern_Europe", "Territory_Western_Europe", "Territory_Southern_Europe"],
     "ArmyBonus": 5
   },
   {
     "Name": "Asia",
-    "Territories": [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27],
+    "Territories": ["Territory_Ural", "Territory_Siberia", "Territory_Yakutsk", "Territory_Vladivostok", "Territory_Afghanistan", "Territory_China", "Territory_Mongolia", "Territory_Irkutsk", "Territory_Middle_East", "Territory_India", "Territory_Siam", "Territory_Japan"],
     "ArmyBonus": 7
   },
   {
     "Name": "South America",
-    "Territories": [28, 29, 30, 31],
+    "Territories": ["Territory_Venezuela", "Territory_Peru", "Territory_Brazil", "Territory_Argentina"],
     "ArmyBonus": 2
   },
   {
     "Name": "Africa",
-    "Territories": [32, 33, 34, 35, 36, 37],
+    "Territories": ["Territory_North_Africa", "Territory_Egypt", "Territory_East_Africa", "Territory_Congo", "Territory_Madagascar", "Territory_South_Africa"],
     "ArmyBonus": 3
   },
   {
     "Name": "Oceania",
-    "Territories": [38, 39, 40, 41],
+    "Territories": ["Territory_Indonesia", "Territory_New_Guinea", 40, 41],
     "ArmyBonus": 2
   }
 ]
