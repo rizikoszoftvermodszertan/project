@@ -1,5 +1,7 @@
 package inf.unideb.hu.riziko;
 
+import inf.unideb.hu.riziko.controller.WebSocketController;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import inf.unideb.hu.riziko.controller.SocketHandler;
 import org.springframework.boot.SpringApplication;
@@ -20,17 +22,18 @@ public class BackendApplication {
 
     @Configuration
     @EnableWebSocket
-    public static class WebSocketConfiguration implements WebSocketConfigurer {
+    public class WebSocketConfiguration implements WebSocketConfigurer {
+        @Autowired
+        WebSocketHandler webSocketHandler;
+
+        //public WebSocketConfiguration(WebSocketHandler webSocketHandler) {}
 
         @Override
         public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-            registry.addHandler(socketHandler(), "/socket");
+            registry.addHandler(webSocketHandler, "/socket").withSockJS();
         }
 
-        @Bean
-        WebSocketHandler socketHandler(){
-            return new SocketHandler();
-        }
+
     }
 
 }

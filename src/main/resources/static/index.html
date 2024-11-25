@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+</head>
+<body>
+<label for="username">Felhasználónév</label><input type="text" name="userName" id="username">
+<button id="setUsername">Belépés</button>
+<label for="party">PartyKód</label><input type="text" name="party" id="party" disabled>
+<button id="createParty" disabled>Létrehozás</button>
+<button id="joinParty" disabled>Csatlakozás</button>
+<button id="leaveParty" disabled>Lecsatlakozás</button>
+<table id="partyTable">
+</table>
+
+
+<script src="index.js"></script>
+
+</body>
+</html>
