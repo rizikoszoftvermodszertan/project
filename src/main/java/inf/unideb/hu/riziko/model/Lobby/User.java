@@ -1,6 +1,5 @@
 package inf.unideb.hu.riziko.model.Lobby;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

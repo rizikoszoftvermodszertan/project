@@ -1,7 +1,6 @@
 package inf.unideb.hu.riziko.controller;
 
 import inf.unideb.hu.riziko.model.Lobby.Lobby;
-import inf.unideb.hu.riziko.model.Lobby.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

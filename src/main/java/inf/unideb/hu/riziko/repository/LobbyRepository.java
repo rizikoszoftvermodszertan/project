@@ -4,9 +4,7 @@ import inf.unideb.hu.riziko.controller.WebSocketController;
 import inf.unideb.hu.riziko.model.Lobby.Lobby;
 import inf.unideb.hu.riziko.model.Lobby.User;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.socket.WebSocketSession;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;

@@ -1,8 +1,6 @@
 package inf.unideb.hu.riziko.repository;
 
 import inf.unideb.hu.riziko.model.Lobby.User;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;

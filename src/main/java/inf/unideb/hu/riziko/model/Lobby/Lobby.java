@@ -3,7 +3,7 @@ package inf.unideb.hu.riziko.model.Lobby;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.util.ArrayList;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.UUID;
