@@ -13,10 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+
+//Websocketet csak arra használjuk, hogy a kliensnek jelezzük, hogy változott valaminek az állapota és frissítsen
 @Controller
 public class WebSocketController extends TextWebSocketHandler {
     private final HashMap<String, WebSocketSession> sessions = new HashMap<>();
 
+    //sessionök párosítása useridhoz
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         UUID uuid = UUID.fromString(message.getPayload());
@@ -24,6 +27,7 @@ public class WebSocketController extends TextWebSocketHandler {
         session.sendMessage(new TextMessage("Registration: OK"));
     }
 
+    //userid lista alapján küldjünk a sessionökre üzenetet
     public void sendMessages(List<String> to, String message){
         sessions.entrySet().stream()
                 .filter(entry -> to.contains(entry.getKey()))

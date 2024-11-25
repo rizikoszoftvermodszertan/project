@@ -48,6 +48,8 @@ public class LobbyRepository {
         sendUpdateToLobbyMembers(l);
     }
 
+
+    // Ezt kell meghívni ha azt szeretnénk, hogy a lobby összes tagja frissítsen
     private void sendUpdateToLobbyMembers(Lobby lobby){
         List<String> list = lobby.getJoinedUsers().stream().map(User::getUserId).toList();
         socketController.sendMessages(list, "updatelobby");

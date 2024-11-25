@@ -23,8 +23,6 @@ public class BackendApplication {
         @Autowired
         WebSocketHandler webSocketHandler;
 
-        //public WebSocketConfiguration(WebSocketHandler webSocketHandler) {}
-
         @Override
         public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
             registry.addHandler(webSocketHandler, "/socket").withSockJS();
