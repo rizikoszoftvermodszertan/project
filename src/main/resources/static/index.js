@@ -3,8 +3,11 @@ var lobbyId = null
 
 const baseUrl = window.location.origin;
 
-var sockJs = new SockJS("http://localhost:8080/socket");
+//WebSocket kezelő
+var sockJs = new SockJS(baseUrl + "/socket");
 
+
+//HTML Elemek DOM hivatkozásai
 const createUserButton = document.getElementById("setUsername")
 const usernameInput = document.getElementById("username")
 const partyTable = document.getElementById("partyTable")
@@ -13,7 +16,7 @@ const createPartyButton = document.getElementById("createParty")
 const joinPartyButton = document.getElementById("joinParty")
 const leavePartyButton = document.getElementById("leaveParty")
 
-
+//Itt kezeljük ha a server frissítésre késztet.
 sockJs.onmessage = function (e) {
     console.log("socketmessage:", e.data)
     switch (e.data){
@@ -46,12 +49,10 @@ function isUserInsideParty(lobby){
     return false;
 }
 
+//A parti táblázátot állítja, illetve az aktív gombokat/inputokat
 async function updatePartyUI() {
-
     var lobby = await getParty()
     console.log("createPartyResponse:", JSON.stringify(lobby));
-
-
 
     if(isUserInsideParty(lobby)) {
         partyIdInput.value = lobby.lobbyId;
@@ -113,23 +114,18 @@ createPartyButton.addEventListener("click", async () => {
 })
 
 joinPartyButton.addEventListener("click", async () => {
-    lobbyId = partyIdInput.value
-    if (user.userId == null) {
-        alert("Nem léptél még be")
-        return;
-    }
 
+    lobbyId = partyIdInput.value
     if (partyIdInput.value === "") {
         alert("Nem adtál meg partyIdt")
         return;
     }
 
-    const url = baseUrl + "/lobby/" + partyIdInput.value + "/join"
+    const url = baseUrl + "/lobby/" + lobbyId + "/join"
     const response = await fetch(url, {method: "POST", body: user.userId})
 
     if (!response.ok) {
-        alert("Hiba")
-        return;
+        console.log(response.status)
     }
 })
 
