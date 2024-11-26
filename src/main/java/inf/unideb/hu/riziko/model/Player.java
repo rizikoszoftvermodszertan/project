@@ -1,8 +1,8 @@
 package inf.unideb.hu.riziko.model;
 
 import inf.unideb.hu.riziko.model.map.Territory;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -13,16 +13,32 @@ import java.util.ArrayList;
 @ToString
 public class Player {
     @Getter
+    @NonNull
     private final PlayerID ID;
     @Getter
     private final Territory HQLocation; //Csak a Capital játékmódban!
     @Getter
     private final Mission mission; //Csak a Secret Mission játékmódban!
-    ArrayList<TerritoryCard> cards;
+    @Getter
+    private ArrayList<TerritoryCard> cards;
 
-    public Player(PlayerID ID, Territory HQLocation, Mission mission) {
+    public Player(@NonNull PlayerID ID) {
+        this.ID = ID;
+        this.HQLocation = null;
+        this.mission = null;
+        this.cards = new ArrayList<>();
+    }
+
+    public Player(@NonNull PlayerID ID, Territory HQLocation) {
         this.ID = ID;
         this.HQLocation = HQLocation;
+        this.mission = null;
+        this.cards = new ArrayList<>();
+    }
+
+    public Player(@NonNull PlayerID ID, Mission mission) {
+        this.ID = ID;
+        this.HQLocation = null;
         this.mission = mission;
         this.cards = new ArrayList<>();
     }
