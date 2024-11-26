@@ -7,7 +7,7 @@ const baseUrl = window.location.origin;
 var sockJs = new SockJS(baseUrl + "/socket");
 
 
-//HTML Elemek DOM hivatkozásai
+//konstans HTML Elemek DOM hivatkozásai
 const createUserButton = document.getElementById("setUsername")
 const usernameInput = document.getElementById("username")
 const partyTable = document.getElementById("partyTable")
@@ -25,7 +25,7 @@ sockJs.onmessage = function (e) {
     }
 }
 
-async function getParty(){
+async function getLobby(){
     try {
         const url = baseUrl + "/lobby/" + lobbyId
         const response = await fetch(url)
@@ -39,7 +39,7 @@ async function getParty(){
     }
 }
 
-function isUserInsideParty(lobby){
+function isUserInsideLobby(lobby){
     for (let i = 0; i < lobby.joinedUsers.length; i++){
         const usr = lobby.joinedUsers[i]
         if(usr.userId === user.userId){
@@ -49,31 +49,65 @@ function isUserInsideParty(lobby){
     return false;
 }
 
+function closePartyUI(){
+    partyTable.innerHTML = ""
+    createPartyButton.disabled = false;
+    joinPartyButton.disabled = false;
+    leavePartyButton.disabled = true;
+    partyIdInput.value = ""
+    partyIdInput.disabled = false;
+}
+
 //A parti táblázátot állítja, illetve az aktív gombokat/inputokat
 async function updatePartyUI() {
-    var lobby = await getParty()
-    console.log("createPartyResponse:", JSON.stringify(lobby));
-
-    if(isUserInsideParty(lobby)) {
-        partyIdInput.value = lobby.lobbyId;
-        partyIdInput.disabled = true;
-        createPartyButton.disabled = true;
-        joinPartyButton.disabled = true;
-        leavePartyButton.disabled = false;
-
-        partyTable.innerHTML = '<tr><th>Felhasználónév</th><th>Leader</th></tr>'
-        lobby.joinedUsers.forEach((user) => {
-            const leaderCheck = user.name === lobby.leader.name ? "*" : ""
-            partyTable.innerHTML += '<tr><td>' + user.name + '</td><td>' + leaderCheck
-                + '</td></tr>'
-
-        })
+    if(lobbyId == null){
+        closePartyUI()
+        return;
     }
-    else{
-        partyTable.innerHTML = ""
-        createPartyButton.disabled = false;
-        joinPartyButton.disabled = false;
-        leavePartyButton.disabled = true;
+
+    var lobby = await getLobby()
+    console.log("getPartyResponse:", JSON.stringify(lobby));
+
+    if(!isUserInsideLobby(lobby)){
+        closePartyUI()
+        lobbyId = null
+        return;
+    }
+
+    partyIdInput.value = lobby.lobbyId;
+    partyIdInput.disabled = true;
+    createPartyButton.disabled = true;
+    joinPartyButton.disabled = true;
+    leavePartyButton.disabled = false;
+
+    const isLeader = user.userId === lobby.leader.userId
+    const leaderActionHeader = isLeader ? "<th>Akció</th>" : ""
+    partyTable.innerHTML = '<tr><th>Felhasználónév</th><th>Leader</th>' + leaderActionHeader + '</tr>'
+    lobby.joinedUsers.forEach((user) => {
+        const userIsLeader = user.userId === lobby.leader.userId
+        const leaderCheck = userIsLeader ? "*" : ""
+        const leaderActions = isLeader && !userIsLeader ? "<td><button class='kickButton' value='"+ user.userId +"'>Kirúgás</button></td>" : ""
+
+        partyTable.innerHTML += '<tr><td>' + user.name + '</td><td>' + leaderCheck
+            + '</td>'
+            + leaderActions
+            + '</tr>'
+
+    })
+
+    if(isLeader){
+        const kickButtons = document.getElementsByClassName("kickButton")
+        for(let i = 0; i < kickButtons.length; i++) {
+            kickButtons[i].addEventListener("click", async () => {
+                const url = baseUrl + "/lobby/leave"
+                const response = await fetch(url, {method: "POST", body: kickButtons[i].value});
+
+                if (!response.ok) {
+                    console.log("leaveUser:", response.status);
+                    return;
+                }
+            })
+        }
     }
 }
 
@@ -134,9 +168,10 @@ leavePartyButton.addEventListener("click", async () => {
     const response = await fetch(url, {method: "POST", body: user.userId});
 
     if (!response.ok) {
-        console.log("createUser:", response.status);
+        console.log("leaveUser:", response.status);
         return;
     }
+    lobbyId = null
     updatePartyUI()
 })
 

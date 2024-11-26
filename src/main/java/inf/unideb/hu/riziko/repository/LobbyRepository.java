@@ -35,17 +35,16 @@ public class LobbyRepository {
                 .filter(lobby -> Objects.equals(lobby.getLobbyId(), lobbyId))
                 .findFirst()
                 .get();
-        System.out.println("Lobby: " + l.getLobbyId());
         return l;
     }
 
     public void leaveLobby(User user){
         Lobby l = lobbies.stream().filter(lobby -> lobby.getJoinedUsers().contains(user)).findFirst().get();
+        sendUpdateToLobbyMembers(l);
         l.leaveLobby(user.getUserId());
         if((long) l.getJoinedUsers().size() == 0){
             lobbies.remove(l);
         }
-        sendUpdateToLobbyMembers(l);
     }
 
 
