@@ -1,5 +1,6 @@
 package inf.unideb.hu.riziko.model.Lobby;
 
+import inf.unideb.hu.riziko.model.GameInstance;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -15,11 +16,13 @@ public class Lobby {
     String lobbyId;
     HashSet<User> joinedUsers = new HashSet<>();
     User leader;
+    GameInstance gameInstance;
 
     public Lobby(User user){
         leader = user;
         lobbyId = UUID.randomUUID().toString();
         joinedUsers.add(user);
+        gameInstance = new GameInstance();
     }
 
     public void joinLobby(User user){

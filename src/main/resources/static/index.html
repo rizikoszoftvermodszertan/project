@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <link href="style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <label for="username">Felhasználónév</label><input type="text" name="userName" id="username">
@@ -13,7 +14,16 @@
 <button id="joinParty" disabled>Csatlakozás</button>
 <button id="leaveParty" disabled>Lecsatlakozás</button>
 <table id="partyTable">
+
 </table>
+<div id="gameModeMenu" hidden>
+    <label for="gameModeSelect"></label>
+    <select id="gameModeSelect" disabled>
+        <option value="WORLD_DOMINATION" selected>World Domination</option>
+        <option value="CAPITAL">Capital</option>
+        <option value="SECRET_MISSION">Titkos küldetés</option>
+    </select>
+</div>
 
 
 <script src="index.js"></script>

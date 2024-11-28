@@ -22,4 +22,7 @@ public interface LobbyController {
     void leaveLobby(@RequestBody String userId);
     @PostMapping("/lobby/{lobbyId}/start")
     void startLobby(@PathVariable String lobbyId);
+    @PostMapping("/lobby/{lobbyId}/gamemode")
+    void setGameMode(@PathVariable String lobbyId, @RequestBody String gameMode);
+
 }

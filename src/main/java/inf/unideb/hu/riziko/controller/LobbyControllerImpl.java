@@ -44,4 +44,9 @@ public class LobbyControllerImpl implements LobbyController{
     public void startLobby(String lobbyId) {
 
     }
+
+    @Override
+    public void setGameMode(String lobbyId, String gameMode) {
+        lobbyRepository.setGameMode(lobbyId, gameMode);
+    }
 }

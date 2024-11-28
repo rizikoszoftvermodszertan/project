@@ -1,6 +1,7 @@
 package inf.unideb.hu.riziko.repository;
 
 import inf.unideb.hu.riziko.controller.WebSocketController;
+import inf.unideb.hu.riziko.model.GameMode;
 import inf.unideb.hu.riziko.model.Lobby.Lobby;
 import inf.unideb.hu.riziko.model.Lobby.User;
 import org.springframework.stereotype.Repository;
@@ -24,7 +25,7 @@ public class LobbyRepository {
     }
 
     public Lobby joinLobby(User user, String lobbyId){
-        Lobby l = lobbies.stream().filter(lobby -> lobby.getLobbyId().equals(lobbyId)).findFirst().get();
+        Lobby l = getLobby(lobbyId);
         l.joinLobby(user);
         sendUpdateToLobbyMembers(l);
         return l;
@@ -47,11 +48,18 @@ public class LobbyRepository {
         }
     }
 
+    public void setGameMode(String lobbyId, String gameMode) {
+        Lobby l = getLobby(lobbyId);
+        l.getGameInstance().setGameMode(GameMode.valueOf(gameMode));
+        sendUpdateToLobbyMembers(l);
+    }
+
 
     // Ezt kell meghívni ha azt szeretnénk, hogy a lobby összes tagja frissítsen
     private void sendUpdateToLobbyMembers(Lobby lobby){
         List<String> list = lobby.getJoinedUsers().stream().map(User::getUserId).toList();
         socketController.sendMessages(list, "updatelobby");
     }
+
 
 }
