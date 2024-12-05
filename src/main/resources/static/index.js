@@ -205,6 +205,8 @@ leavePartyButton.addEventListener("click", async () => {
 
 /**
  * Kattintás események vége
+ * 
+ * Játékmenet kódja
  */
 
 const nodes = await d3.json("territories.json");
@@ -230,12 +232,16 @@ const height = document.getElementsByTagName("svg")[0].height.baseVal.value
 const width = document.getElementsByTagName("svg")[0].width.baseVal.value
 const tester = document.getElementById("tester")
 
+//Melyik IDjú körök vannak kiválasztva: szám
 var selected = []
+
 updateGameUI()
 
+//A tábla elemeinek kirajzolása
 function updateGameUI(){
     const svg = d3.select("svg")
 
+    //Kiválaszott elem
     svg.selectAll(".selected").data(selected).join("circle")
         .attr("class", "selected")
         .attr("cx", d => board[d].coords[0] * width / 100)
@@ -244,7 +250,7 @@ function updateGameUI(){
         .style("fill", "transparent")
         .style("stroke", "black")
 
-
+    //Mező
     svg.selectAll(".board")
         .data(board)
         .join("circle")
@@ -259,6 +265,7 @@ function updateGameUI(){
             boardClicked(e.target.id)
         })
 
+    //Egységek száma
     svg.selectAll("text")
         .data(board)
         .join("text")
