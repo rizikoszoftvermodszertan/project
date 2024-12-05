@@ -1,5 +1,6 @@
 package inf.unideb.hu.riziko.model.map;
 
+import inf.unideb.hu.riziko.model.Player;
 import inf.unideb.hu.riziko.model.PlayerID;
 import lombok.*;
 import org.springframework.lang.NonNull;
@@ -20,5 +21,26 @@ public class Territory {
     public Territory(Integer ID, String name) {
         this.owner = PlayerID.NEUTRAL;
         this.armyCount = 0;
+    }
+
+    public void removeUnits(int count) {
+        this.armyCount -= count;
+        if (this.armyCount < 0) this.armyCount = 0;
+    }
+
+    public int getUnitCount() {
+        return this.armyCount;
+    }
+
+    public void setUnitCount(int unitCount) {
+        this.armyCount = unitCount;
+    }
+
+    public Player getOwner() {
+        return this.owner;
+    }
+
+    public void setOwner(Player owner) {
+        this.owner = owner.getID();
     }
 }
