@@ -207,3 +207,75 @@ leavePartyButton.addEventListener("click", async () => {
  * Kattintás események vége
  */
 
+const nodes = await d3.json("territories.json");
+//var adjacencies = await d3.json("adjacencies.json")
+//var continents = await d3.json("continents.json")
+
+const colorMapping = {
+    "neutral":"grey",
+    "1":"red",
+    "2":"blue",
+    "3":"green",
+    "4":"brown",
+    "5":"purple",
+    "6":"orange"
+}
+
+var board = []
+nodes.forEach((e) => {
+    board.push({id: e.Id, coords: e.coords, units: 0, owner: e.owner})
+})
+
+const height = document.getElementsByTagName("svg")[0].height.baseVal.value
+const width = document.getElementsByTagName("svg")[0].width.baseVal.value
+const tester = document.getElementById("tester")
+
+var selected = []
+updateGameUI()
+
+function updateGameUI(){
+    const svg = d3.select("svg")
+
+    svg.selectAll(".selected").data(selected).join("circle")
+        .attr("class", "selected")
+        .attr("cx", d => board[d].coords[0] * width / 100)
+        .attr("cy", d => board[d].coords[1] * height / 100)
+        .attr("r", 15)
+        .style("fill", "transparent")
+        .style("stroke", "black")
+
+
+    svg.selectAll(".board")
+        .data(board)
+        .join("circle")
+        .attr("class", "board")
+        .attr("cx", d => d.coords[0] * width / 100)
+        .attr("cy", d => d.coords[1] * height / 100)
+        .attr("r", 10)
+        .attr("id", d => d.id)
+        .style("stroke", "black")
+        .style("fill", d => colorMapping[d.owner])
+        .on("click", (e) => {
+            boardClicked(e.target.id)
+        })
+
+    svg.selectAll("text")
+        .data(board)
+        .join("text")
+        .attr("x", d => d.coords[0] * width / 100 - 4)
+        .attr("y", d => d.coords[1] * height / 100 + 4)
+        .style("font", "italic 13px sans-serif")
+        .style("fill", "white")
+        .attr("id", d => d.id)
+        .text(d => d.units)
+        .on("click", (e) => {
+            boardClicked(e.target.id)
+        })
+
+}
+
+function boardClicked(id){
+    tester.innerHTML = id
+    selected.push(id)
+    updateGameUI()
+}
