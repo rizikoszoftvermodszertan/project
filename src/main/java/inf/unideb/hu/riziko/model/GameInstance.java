@@ -80,7 +80,7 @@ public class GameInstance {
     }
 
     private boolean checkIfGameOver() {
-        // Implementáció eldönti, hogy a játék véget ért-ee
+        // Implementáció eldönti, hogy a játék véget ért-e
         return false;
     }
 
