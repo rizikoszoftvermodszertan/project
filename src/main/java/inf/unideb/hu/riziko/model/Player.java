@@ -107,6 +107,6 @@ public class Player {
                 }
             }
         }
-        return new ArrayList<>();  // Ha nincs érvényes szett
+        return new ArrayList<>();  // Ha nincs érvényes szettt
     }
 }
