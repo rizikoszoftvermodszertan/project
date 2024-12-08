@@ -1,6 +1,7 @@
 var user = null
 var lobbyId = null
 var game = null
+var thisPlayerID = null
 const baseUrl = window.location.origin;
 
 //WebSocket kezelő
@@ -27,6 +28,7 @@ sockJs.onmessage = function (e) {
             break;
 
         case 'updateGame':
+            refreshGameState()
             updateGameUI()
             break;
     }
@@ -254,10 +256,27 @@ const tester = document.getElementById("tester")
 //Melyik IDjú körök vannak kiválasztva: szám
 var selected = []
 
+async function refreshGameState(){
+    game = await getGame()
+    thisPlayerID = game.players[user.userId]
+    if(isDeploymentPhase() && isYourTurn()){
+        deployableUnits = 10
+    }
+    board.forEach((row)=>{
+        const owner = game.territories[row.name].owner
+        const armyCount = game.territories[row.name].armyCount
+
+        const i = board.findIndex( (e) => e.name === row.name)
+        board[i].owner = owner
+        board[i].units = armyCount
+    })
+
+}
+
 //A tábla elemeinek kirajzolása
 async function updateGameUI() {
     const svg = d3.select("svg")
-    game = await getGame()
+
 
     //Kiválaszott elem
     svg.selectAll(".selected").data(selected).join("circle")
@@ -299,9 +318,34 @@ async function updateGameUI() {
 
 }
 
-function boardClicked(id){
+function territoryOwnedByPlayer(id){
+    return game.gameBoard.territories[board[0].name].owner === thisPlayerID
+}
 
-    var isYourTurn = true
+function isNeutralTerritory(id){
+    return game.gameBoard.territories[board[0].name].owner === "Neutral"
+}
+
+var deployableUnits = 0
+
+
+function isDeploymentPhase(){
+    return game.currentTurn.currentState === "DEPLOYMENT"
+}
+
+function isAttackPhase(){
+    return game.currentTurn.currentState === "ATTACK"
+}
+
+function isFortifyPhase(){
+    return game.currentTurn.currentState === "FORTIFY"
+}
+
+function isYourTurn(){
+    return game.currentTurn.activePlayer === thisPlayerID
+}
+
+function boardClicked(id){
 
     if(!isYourTurn){
         return
@@ -309,37 +353,33 @@ function boardClicked(id){
 
     selected.push(id)
 
+    if(isDeploymentPhase() && territoryOwnedByPlayer(id)){
+        board[id].units++
+        deployableUnits--
 
-
-    var isSetupPhase = game.gamePhase === "SETUP"
-
-    if(isSetupPhase){
-        return
-    }
-
-    var isPhaseOne = true
-
-    if(isPhaseOne){
-        var unitsToBePlaced = 2
-        
-        return
+        if(deployableUnits == 0){
+            //Állapot küldése a szervernek
+            refreshGameState()
+        }
+        selected = []
+        updateGameUI()
+        return;
     }
 
     if(selected.length < 2){
         return
     }
 
-    var isPhaseTwo = true
-    if(isPhaseTwo){
+    if(isAttackPhase()){
+        //Támadás selected[0]-ról selected[1]re
+        selected = []
         return
     }
 
-    var isPhaseThree = true
-    if(isPhaseThree){
+    if(isFortifyPhase()){
+        selected = []
         return
     }
-
-
 
     updateGameUI()
 }

@@ -26,6 +26,9 @@ public class LobbyRepository {
 
     public Lobby joinLobby(User user, String lobbyId){
         Lobby l = getLobby(lobbyId);
+        if(l.getJoinedUsers().size() == 6){
+            throw new IllegalArgumentException("Can't join the lobby");
+        }
         l.joinLobby(user);
         sendUpdateToLobbyMembers(l);
         return l;
@@ -50,7 +53,7 @@ public class LobbyRepository {
 
     public void setGameMode(String lobbyId, String gameMode) {
         Lobby l = getLobby(lobbyId);
-        l.getGameInstance().setGameMode(GameMode.valueOf(gameMode));
+        l.setGameMode(GameMode.valueOf(gameMode));
         sendUpdateToLobbyMembers(l);
     }
 
