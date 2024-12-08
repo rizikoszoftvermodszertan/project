@@ -15,6 +15,8 @@ const partyIdInput = document.getElementById("party")
 const createPartyButton = document.getElementById("createParty")
 const joinPartyButton = document.getElementById("joinParty")
 const leavePartyButton = document.getElementById("leaveParty")
+const gameModeMenu = document.getElementById("gameModeMenu")
+const gameModeSelect = document.getElementById("gameModeSelect")
 
 //Itt kezeljük ha a server frissítésre késztet.
 sockJs.onmessage = function (e) {
@@ -48,7 +50,7 @@ function isUserInsideLobby(lobby){
     }
     return false;
 }
-
+//Partifelület megjelenítése
 function closePartyUI(){
     partyTable.innerHTML = ""
     createPartyButton.disabled = false;
@@ -56,6 +58,7 @@ function closePartyUI(){
     leavePartyButton.disabled = true;
     partyIdInput.value = ""
     partyIdInput.disabled = false;
+    gameModeMenu.hidden = true;
 }
 
 //A parti táblázátot állítja, illetve az aktív gombokat/inputokat
@@ -79,6 +82,8 @@ async function updatePartyUI() {
     createPartyButton.disabled = true;
     joinPartyButton.disabled = true;
     leavePartyButton.disabled = false;
+    gameModeMenu.hidden = false;
+    gameModeSelect.disabled = true;
 
     const isLeader = user.userId === lobby.leader.userId
     const leaderActionHeader = isLeader ? "<th>Akció</th>" : ""
@@ -87,7 +92,6 @@ async function updatePartyUI() {
         const userIsLeader = user.userId === lobby.leader.userId
         const leaderCheck = userIsLeader ? "*" : ""
         const leaderActions = isLeader && !userIsLeader ? "<td><button class='kickButton' value='"+ user.userId +"'>Kirúgás</button></td>" : ""
-
         partyTable.innerHTML += '<tr><td>' + user.name + '</td><td>' + leaderCheck
             + '</td>'
             + leaderActions
@@ -95,7 +99,19 @@ async function updatePartyUI() {
 
     })
 
+    const options = gameModeSelect.getElementsByTagName("option")
+    const gameMode = lobby.gameInstance.gameMode
+    for(let i = 0; i < options.length; i++){
+        if(options[i].value === gameMode){
+            console.log(gameMode)
+            options[i].selected = true;
+        }
+    }
+
+
     if(isLeader){
+        gameModeSelect.disabled = false;
+
         const kickButtons = document.getElementsByClassName("kickButton")
         for(let i = 0; i < kickButtons.length; i++) {
             kickButtons[i].addEventListener("click", async () => {
@@ -110,6 +126,16 @@ async function updatePartyUI() {
         }
     }
 }
+
+/**
+ * Kattintás események
+ */
+
+gameModeSelect.addEventListener("change", async (e) => {
+    const newGameMode = gameModeSelect.value;
+    const url = baseUrl + "/lobby/" + lobbyId + "/gamemode";
+    const response = await fetch(url, {method: "POST", body: gameModeSelect.value});
+})
 
 createUserButton.addEventListener("click", async () => {
     const username = usernameInput.value;
@@ -131,7 +157,7 @@ createUserButton.addEventListener("click", async () => {
     partyIdInput.disabled = false;
     usernameInput.disabled = true;
     createUserButton.disabled = true;
-    sockJs.send(user.userId)
+    await sockJs.send(user.userId)
 })
 
 createPartyButton.addEventListener("click", async () => {
@@ -144,6 +170,7 @@ createPartyButton.addEventListener("click", async () => {
     }
 
     lobbyId = await response.text()
+
     updatePartyUI()
 })
 
@@ -175,4 +202,8 @@ leavePartyButton.addEventListener("click", async () => {
     updatePartyUI()
 })
 
+
+/**
+ * Kattintás események vége
+ */
 
