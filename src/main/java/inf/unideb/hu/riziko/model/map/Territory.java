@@ -17,7 +17,7 @@ public class Territory {
     @Setter
     @NonNull
     private Integer armyCount;
-    public Territory(Integer ID, String name) {
+    public Territory() {
         this.owner = PlayerID.NEUTRAL;
         this.armyCount = 0;
     }

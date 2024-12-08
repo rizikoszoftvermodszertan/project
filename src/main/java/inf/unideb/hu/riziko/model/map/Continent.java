@@ -3,6 +3,7 @@ import inf.unideb.hu.riziko.model.PlayerID;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import java.util.Set;
  *
  * owner: A tulajdonos. NEUTRAL = nincs tulajdonos.
  */
+@ToString
 public class Continent {
     @Getter
     @NonNull
@@ -29,7 +31,7 @@ public class Continent {
     @NonNull
     private PlayerID owner;
 
-    public Continent(String name, ArrayList<String> territories, Integer armyBonus) {
+    public Continent(String name, HashSet<String> territories, Integer armyBonus) {
         this.name = name;
         this.armyBonus = armyBonus;
         this.territories = new HashSet<>(territories);

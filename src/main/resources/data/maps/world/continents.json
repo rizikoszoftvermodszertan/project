@@ -1,32 +1,32 @@
 [
   {
-    "Name": "North America",
-    "Territories": ["Territory_Alaska", "Territory_NWT", "Territory_NWT", "Territory_Alberta", "Territory_Ontario", "Territory_Quebec", "Territory_Western_US", "Territory_Eastern_US", "Territory_Central_America"],
-    "ArmyBonus": 5
+    "name": "North America",
+    "territories": ["Territory_Alaska", "Territory_NWT", "Territory_NWT", "Territory_Alberta", "Territory_Ontario", "Territory_Quebec", "Territory_Western_US", "Territory_Eastern_US", "Territory_Central_America"],
+    "armyBonus": 5
   },
   {
-    "Name": "Europe",
-    "Territories": ["Territory_Iceland", "Territory_Scandinavia", "Territory_Ukraine", "Territory_Great_Britain", "Territory_Northern_Europe", "Territory_Western_Europe", "Territory_Southern_Europe"],
-    "ArmyBonus": 5
+    "name": "Europe",
+    "territories": ["Territory_Iceland", "Territory_Scandinavia", "Territory_Ukraine", "Territory_Great_Britain", "Territory_Northern_Europe", "Territory_Western_Europe", "Territory_Southern_Europe"],
+    "armyBonus": 5
   },
   {
-    "Name": "Asia",
-    "Territories": ["Territory_Ural", "Territory_Siberia", "Territory_Yakutsk", "Territory_Vladivostok", "Territory_Afghanistan", "Territory_China", "Territory_Mongolia", "Territory_Irkutsk", "Territory_Middle_East", "Territory_India", "Territory_Siam", "Territory_Japan"],
-    "ArmyBonus": 7
+    "name": "Asia",
+    "territories": ["Territory_Ural", "Territory_Siberia", "Territory_Yakutsk", "Territory_Vladivostok", "Territory_Afghanistan", "Territory_China", "Territory_Mongolia", "Territory_Irkutsk", "Territory_Middle_East", "Territory_India", "Territory_Siam", "Territory_Japan"],
+    "armyBonus": 7
   },
   {
-    "Name": "South America",
-    "Territories": ["Territory_Venezuela", "Territory_Peru", "Territory_Brazil", "Territory_Argentina"],
-    "ArmyBonus": 2
+    "name": "South America",
+    "territories": ["Territory_Venezuela", "Territory_Peru", "Territory_Brazil", "Territory_Argentina"],
+    "armyBonus": 2
   },
   {
-    "Name": "Africa",
-    "Territories": ["Territory_North_Africa", "Territory_Egypt", "Territory_East_Africa", "Territory_Congo", "Territory_Madagascar", "Territory_South_Africa"],
-    "ArmyBonus": 3
+    "name": "Africa",
+    "territories": ["Territory_North_Africa", "Territory_Egypt", "Territory_East_Africa", "Territory_Congo", "Territory_Madagascar", "Territory_South_Africa"],
+    "armyBonus": 3
   },
   {
-    "Name": "Oceania",
-    "Territories": ["Territory_Indonesia", "Territory_New_Guinea", "Territory_Western_Australia", "Territory_Western_Australia"],
-    "ArmyBonus": 2
+    "name": "Oceania",
+    "territories": ["Territory_Indonesia", "Territory_New_Guinea", "Territory_Western_Australia", "Territory_Western_Australia"],
+    "armyBonus": 2
   }
 ]
