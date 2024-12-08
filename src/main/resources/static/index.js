@@ -1,6 +1,6 @@
 var user = null
 var lobbyId = null
-
+var game = null
 const baseUrl = window.location.origin;
 
 //WebSocket kezelő
@@ -24,12 +24,31 @@ sockJs.onmessage = function (e) {
     switch (e.data){
         case 'updatelobby':
             updatePartyUI()
+            break;
+
+        case 'updateGame':
+            updateGameUI()
+            break;
     }
 }
 
 async function getLobby(){
     try {
         const url = baseUrl + "/lobby/" + lobbyId
+        const response = await fetch(url)
+
+        if (!response.ok) {
+            throw new Error(response.status)
+        }
+        return response.json()
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+async function getGame(){
+    try {
+        const url = baseUrl + "/lobby/" + lobbyId + "/game"
         const response = await fetch(url)
 
         if (!response.ok) {
@@ -235,11 +254,10 @@ const tester = document.getElementById("tester")
 //Melyik IDjú körök vannak kiválasztva: szám
 var selected = []
 
-updateGameUI()
-
 //A tábla elemeinek kirajzolása
-function updateGameUI(){
+async function updateGameUI() {
     const svg = d3.select("svg")
+    game = await getGame()
 
     //Kiválaszott elem
     svg.selectAll(".selected").data(selected).join("circle")
@@ -282,7 +300,46 @@ function updateGameUI(){
 }
 
 function boardClicked(id){
-    tester.innerHTML = id
+
+    var isYourTurn = true
+
+    if(!isYourTurn){
+        return
+    }
+
     selected.push(id)
+
+
+
+    var isSetupPhase = game.gamePhase === "SETUP"
+
+    if(isSetupPhase){
+        return
+    }
+
+    var isPhaseOne = true
+
+    if(isPhaseOne){
+        var unitsToBePlaced = 2
+        
+        return
+    }
+
+    if(selected.length < 2){
+        return
+    }
+
+    var isPhaseTwo = true
+    if(isPhaseTwo){
+        return
+    }
+
+    var isPhaseThree = true
+    if(isPhaseThree){
+        return
+    }
+
+
+
     updateGameUI()
 }
