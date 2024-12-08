@@ -31,16 +31,4 @@ public class Territory {
     public int getUnitCount() {
         return this.armyCount;
     }
-
-    public void setUnitCount(int unitCount) {
-        this.armyCount = unitCount;
-    }
-
-    public Player getOwner() {
-        return this.owner;
-    }
-
-    public void setOwner(Player owner) {
-        this.owner = owner.getID();
-    }
 }

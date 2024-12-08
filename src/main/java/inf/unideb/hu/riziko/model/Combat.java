@@ -45,7 +45,7 @@ public class Combat {
         if (defendingTerritory.getUnitCount() <= 0) {
             System.out.println("Defending territory conquered!");
             defendingTerritory.setOwner(attackingTerritory.getOwner());
-            defendingTerritory.setUnitCount(attackerDiceCount);
+            defendingTerritory.setArmyCount(attackerDiceCount);
 
             attackingTerritory.removeUnits(attackerDiceCount);
 
