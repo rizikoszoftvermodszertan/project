@@ -42,7 +42,7 @@ public class LobbyControllerImpl implements LobbyController{
 
     @Override
     public void startLobby(String lobbyId) {
-
+        lobbyRepository.startGame(lobbyId);
     }
 
     @Override

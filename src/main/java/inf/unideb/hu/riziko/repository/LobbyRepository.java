@@ -62,4 +62,9 @@ public class LobbyRepository {
     }
 
 
+    public void startGame(String lobbyId) {
+        Lobby l = getLobby(lobbyId);
+        l.startGame();
+        sendUpdateToLobbyMembers(l);
+    }
 }

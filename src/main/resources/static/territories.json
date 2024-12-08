@@ -1,0 +1,254 @@
+[
+  {
+    "Name": "Territory_Alaska",
+    "Id": 0,
+    "coords" : [12, 12],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_NWT",
+    "Id": 1,
+    "coords" : [17, 16],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Greenland",
+    "Id": 2,
+    "coords" : [37 , 9],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Alberta",
+    "Id": 3
+    ,"coords" : [14, 25],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Ontario",
+    "Id": 4,
+    "coords" : [21, 30],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Quebec",
+    "Id": 5,
+    "coords" : [28, 33],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Western_US",
+    "Id": 6,
+    "coords" : [11, 35],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Eastern_US",
+    "Id": 7,
+    "coords" : [17, 42],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Central_America",
+    "Id": 8,
+    "coords" : [10,48],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Iceland",
+    "Id": 9,
+    "coords" : [43,18],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Scandinavia",
+    "Id": 10,
+    "coords" : [47,25],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Ukraine",
+    "Id": 11,
+    "coords" : [55,32],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Great_Britain",
+    "Id": 12,
+    "coords" : [41,33],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Northern_Europe",
+    "Id": 13,
+    "coords" : [48,37],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Western_Europe",
+    "Id": 14,
+    "coords" : [40,43],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Southern_Europe",
+    "Id": 15,
+    "coords" : [50,45],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Ural",
+    "Id": 16,
+    "coords" : [61,27],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Siberia",
+    "Id": 17,
+    "coords" : [65.5,23],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Yakutsk",
+    "Id": 18,
+    "coords" : [71,12],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Vladivostok",
+    "Id": 19,
+    "coords" : [76,17],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Afghanistan",
+    "Id": 20,
+    "coords" : [64,40],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_China",
+    "Id": 21,
+    "coords" : [77,40],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Mongolia",
+    "Id": 22,
+    "coords" : [76,30],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Irkutsk",
+    "Id": 23,
+    "coords" : [71,25],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Middle_East",
+    "Id": 24,
+    "coords" : [60,59],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_India",
+    "Id": 25,
+    "coords" : [71,56],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Siam",
+    "Id": 26,
+    "coords" : [79.5,53],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Japan",
+    "Id": 27,
+    "coords" : [87,25],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Venezuela",
+    "Id": 28,
+    "coords" : [15,56],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Peru",
+    "Id": 29,
+    "coords" : [13,73],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Brazil",
+    "Id": 30,
+    "coords" : [21,67],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Argentina",
+    "Id": 31,
+    "coords" : [14,83],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_North_Africa",
+    "Id": 32,
+    "coords" : [40,65],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Egypt",
+    "Id": 33,
+    "coords" : [50,63],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_East_Africa",
+    "Id": 34,
+    "coords" : [54,72],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Congo",
+    "Id": 35,
+    "coords" : [47.5,77],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Madagascar",
+    "Id": 36,
+    "coords" : [57.5,87],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_South_Africa",
+    "Id": 37,
+    "coords" : [50,88],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Indonesia",
+    "Id": 38,
+    "coords" : [80,69],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_New_Guinea",
+    "Id": 39,
+    "coords" : [91,72],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Western_Australia",
+    "Id": 40,
+    "coords" : [82,85],
+    "owner" : "neutral"
+  },
+  {
+    "Name": "Territory_Eastern_Australia",
+    "Id": 41,
+    "coords" : [89,90],
+    "owner" : "neutral"
+  }
+]

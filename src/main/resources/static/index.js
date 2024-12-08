@@ -1,6 +1,6 @@
 var user = null
 var lobbyId = null
-
+var game = null
 const baseUrl = window.location.origin;
 
 //WebSocket kezelő
@@ -24,12 +24,31 @@ sockJs.onmessage = function (e) {
     switch (e.data){
         case 'updatelobby':
             updatePartyUI()
+            break;
+
+        case 'updateGame':
+            updateGameUI()
+            break;
     }
 }
 
 async function getLobby(){
     try {
         const url = baseUrl + "/lobby/" + lobbyId
+        const response = await fetch(url)
+
+        if (!response.ok) {
+            throw new Error(response.status)
+        }
+        return response.json()
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+async function getGame(){
+    try {
+        const url = baseUrl + "/lobby/" + lobbyId + "/game"
         const response = await fetch(url)
 
         if (!response.ok) {
@@ -205,5 +224,122 @@ leavePartyButton.addEventListener("click", async () => {
 
 /**
  * Kattintás események vége
+ * 
+ * Játékmenet kódja
  */
 
+const nodes = await d3.json("territories.json");
+//var adjacencies = await d3.json("adjacencies.json")
+//var continents = await d3.json("continents.json")
+
+const colorMapping = {
+    "neutral":"grey",
+    "1":"red",
+    "2":"blue",
+    "3":"green",
+    "4":"brown",
+    "5":"purple",
+    "6":"orange"
+}
+
+var board = []
+nodes.forEach((e) => {
+    board.push({id: e.Id, coords: e.coords, units: 0, owner: e.owner})
+})
+
+const height = document.getElementsByTagName("svg")[0].height.baseVal.value
+const width = document.getElementsByTagName("svg")[0].width.baseVal.value
+const tester = document.getElementById("tester")
+
+//Melyik IDjú körök vannak kiválasztva: szám
+var selected = []
+
+//A tábla elemeinek kirajzolása
+async function updateGameUI() {
+    const svg = d3.select("svg")
+    game = await getGame()
+
+    //Kiválaszott elem
+    svg.selectAll(".selected").data(selected).join("circle")
+        .attr("class", "selected")
+        .attr("cx", d => board[d].coords[0] * width / 100)
+        .attr("cy", d => board[d].coords[1] * height / 100)
+        .attr("r", 15)
+        .style("fill", "transparent")
+        .style("stroke", "black")
+
+    //Mező
+    svg.selectAll(".board")
+        .data(board)
+        .join("circle")
+        .attr("class", "board")
+        .attr("cx", d => d.coords[0] * width / 100)
+        .attr("cy", d => d.coords[1] * height / 100)
+        .attr("r", 10)
+        .attr("id", d => d.id)
+        .style("stroke", "black")
+        .style("fill", d => colorMapping[d.owner])
+        .on("click", (e) => {
+            boardClicked(e.target.id)
+        })
+
+    //Egységek száma
+    svg.selectAll("text")
+        .data(board)
+        .join("text")
+        .attr("x", d => d.coords[0] * width / 100 - 4)
+        .attr("y", d => d.coords[1] * height / 100 + 4)
+        .style("font", "italic 13px sans-serif")
+        .style("fill", "white")
+        .attr("id", d => d.id)
+        .text(d => d.units)
+        .on("click", (e) => {
+            boardClicked(e.target.id)
+        })
+
+}
+
+function boardClicked(id){
+
+    var isYourTurn = true
+
+    if(!isYourTurn){
+        return
+    }
+
+    selected.push(id)
+
+
+
+    var isSetupPhase = game.gamePhase === "SETUP"
+
+    if(isSetupPhase){
+        return
+    }
+
+    var isPhaseOne = true
+
+    if(isPhaseOne){
+        var unitsToBePlaced = 2
+        
+        return
+    }
+
+    if(selected.length < 2){
+        return
+    }
+
+    var isPhaseTwo = true
+    if(isPhaseTwo){
+        return
+    }
+
+    var isPhaseThree = true
+    if(isPhaseThree){
+        return
+    }
+
+
+
+    updateGameUI()
+}
