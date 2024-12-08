@@ -38,6 +38,7 @@ public class GameBoard {
 
     public Continent findContinentByTerritoryName(String territoryName) {
         try {
+            if (territoryName == null) return null;
             return continents.stream()
                     .filter(continent -> continent.getTerritories().contains(territoryName))
                     .findFirst()

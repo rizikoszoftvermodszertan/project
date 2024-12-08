@@ -3,6 +3,7 @@ package inf.unideb.hu.riziko.model.loader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inf.unideb.hu.riziko.datastructures.UnorderedPair;
 import inf.unideb.hu.riziko.model.GameBoard;
+import inf.unideb.hu.riziko.model.TerritoryCard;
 import inf.unideb.hu.riziko.model.map.Continent;
 import inf.unideb.hu.riziko.model.map.Territory;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class MapLoader {
     private final File continentsFile;
     private final File territoriesFile;
     private final File adjacenciesFile;
+    private final File deckFile;
 
     private static class ContinentsStructure {
         @Setter
@@ -41,15 +43,23 @@ public class MapLoader {
         protected Integer ID;
     }
 
+    private static class CardStructure {
+        @Setter
+        protected String design;
+        @Setter
+        protected String territory;
+    }
+
     private final ObjectMapper mapper = new ObjectMapper();
 
     public MapLoader(String mapPath) {
         continentsFile = new File(mapPath + "/continents.json");
         territoriesFile = new File(mapPath + "/territories.json");
         adjacenciesFile = new File(mapPath + "/adjacencies.json");
+        deckFile = new File(mapPath + "/deck.json");
     }
 
-    public HashSet<Continent> loadContinents() {
+    private HashSet<Continent> loadContinents() {
         try {
             ContinentsStructure[] continentsData = mapper.readValue(continentsFile, ContinentsStructure[].class);
             HashSet<Continent> continentsSet = Arrays.stream(continentsData)
@@ -63,7 +73,7 @@ public class MapLoader {
         }
     }
 
-    public HashMap<String, Territory> loadTerritories() {
+    private HashMap<String, Territory> loadTerritories() {
         try {
             TerritoriesStructure[] territoriesData = mapper.readValue(territoriesFile, TerritoriesStructure[].class);
             loadLogger.info("loaded territory info " + territoriesFile.getAbsolutePath());
@@ -78,7 +88,7 @@ public class MapLoader {
         }
     }
 
-    public HashSet<UnorderedPair<String>> loadAdjacencies() {
+    private HashSet<UnorderedPair<String>> loadAdjacencies() {
         try {
             //ha nem stringeket kap, a világ felrobban
             ArrayList<String>[] adjacenciesData = mapper.readValue(adjacenciesFile, ArrayList[].class);
@@ -88,6 +98,19 @@ public class MapLoader {
                     .collect(Collectors.toCollection(HashSet::new));
         } catch (IOException e) {
             loadLogger.error("loading level file " + adjacenciesFile.getAbsolutePath() + " failed due to " + e + "!");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ArrayList<TerritoryCard> loadDeck() {
+        try {
+            CardStructure[] deckData = mapper.readValue(deckFile, CardStructure[].class);
+            loadLogger.info("loaded deck info " + deckFile.getAbsolutePath());
+            return Arrays.stream(deckData)
+                    .map(x -> new TerritoryCard(x.design, x.territory))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (IOException e) {
+            loadLogger.error("loading level file " + deckFile.getAbsolutePath() + " failed due to " + e + "!");
             throw new RuntimeException(e);
         }
     }

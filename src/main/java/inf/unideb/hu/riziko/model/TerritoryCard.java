@@ -22,4 +22,19 @@ public class TerritoryCard {
     private final CardDesign design;
     @Getter
     private final String territoryID; //Ha WILD kártya, akkor ez NULL!!!
+
+    public TerritoryCard(String design, String territoryID) {
+        switch (design) {
+            case "Infantry" -> this.design = CardDesign.INFANTRY;
+            case "Cavalry" -> this.design = CardDesign.CAVALRY;
+            case "Artillery" -> this.design = CardDesign.ARTILLERY;
+            case "Wild" -> {
+                this.design = CardDesign.WILD;
+                this.territoryID = null;
+                return;
+            }
+            default -> throw new IllegalArgumentException("Invalid card type!");
+        }
+        this.territoryID = territoryID;
+    }
 }
