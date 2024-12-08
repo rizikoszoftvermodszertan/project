@@ -1,7 +1,7 @@
 [
   {
     "name": "North America",
-    "territories": ["Territory_Alaska", "Territory_NWT", "Territory_NWT", "Territory_Alberta", "Territory_Ontario", "Territory_Quebec", "Territory_Western_US", "Territory_Eastern_US", "Territory_Central_America"],
+    "territories": ["Territory_Alaska", "Territory_NWT", "Territory_Alberta", "Territory_Ontario", "Territory_Quebec", "Territory_Western_US", "Territory_Eastern_US", "Territory_Central_America"],
     "armyBonus": 5
   },
   {
@@ -26,7 +26,7 @@
   },
   {
     "name": "Oceania",
-    "territories": ["Territory_Indonesia", "Territory_New_Guinea", "Territory_Western_Australia", "Territory_Western_Australia"],
+    "territories": ["Territory_Indonesia", "Territory_New_Guinea", "Territory_Western_Australia", "Territory_Eastern_Australia"],
     "armyBonus": 2
   }
 ]
