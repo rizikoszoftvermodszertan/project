@@ -7,11 +7,19 @@ package inf.unideb.hu.riziko.model;
  **/
 
 public enum PlayerID {
-    NEUTRAL,
-    PLAYER1,
-    PLAYER2,
-    PLAYER3,
-    PLAYER4,
-    PLAYER5,
-    PLAYER6
+    NEUTRAL (0),
+    PLAYER1 (1),
+    PLAYER2 (2),
+    PLAYER3 (3),
+    PLAYER4 (4),
+    PLAYER5 (5),
+    PLAYER6 (6);
+
+    private final Integer value;
+    PlayerID(Integer value) {
+        this.value = value;
+    }
+    private Integer value() {
+        return value;
+    }
 }

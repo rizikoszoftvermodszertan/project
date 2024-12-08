@@ -16,7 +16,7 @@ public class Player {
     @NonNull
     private final PlayerID ID;
     @Getter
-    private final Territory HQLocation; //Csak a Capital játékmódban!
+    private Territory HQLocation; //Csak a Capital játékmódban!
     @Getter
     private final Mission mission; //Csak a Secret Mission játékmódban!
     @Getter
@@ -26,20 +26,6 @@ public class Player {
         this.ID = ID;
         this.HQLocation = null;
         this.mission = null;
-        this.cards = new ArrayList<>();
-    }
-
-    public Player(@NonNull PlayerID ID, Territory HQLocation) {
-        this.ID = ID;
-        this.HQLocation = HQLocation;
-        this.mission = null;
-        this.cards = new ArrayList<>();
-    }
-
-    public Player(@NonNull PlayerID ID, Mission mission) {
-        this.ID = ID;
-        this.HQLocation = null;
-        this.mission = mission;
         this.cards = new ArrayList<>();
     }
 

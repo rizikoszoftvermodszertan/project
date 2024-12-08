@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  */
 @ToString
 public class Turn {
-    public enum TurnState {
+    private enum TurnState {
         DEPLOYMENT,
         ATTACK,
         FORTIFY
@@ -37,6 +37,7 @@ public class Turn {
         }
     }
 
+    //TODO: ne lehessen nem létező játékosnak adni a kört!!
     public void advancePlayer() {
         this.currentState = TurnState.DEPLOYMENT;
         switch (this.activePlayer) {
