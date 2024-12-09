@@ -1,6 +1,4 @@
-import inf.unideb.hu.riziko.model.GameBoard;
-import inf.unideb.hu.riziko.model.PlayerID;
-import inf.unideb.hu.riziko.model.TerritoryCard;
+import inf.unideb.hu.riziko.model.*;
 import inf.unideb.hu.riziko.model.loader.MapLoader;
 import org.junit.jupiter.api.Test;
 
@@ -20,5 +18,11 @@ public class GameBoardTest {
 
         testBoard.distributeTerritories(players);
         System.out.println(testBoard);
+    }
+
+    @Test
+    public void distributeTerrTest2() {
+        GameInstance game = new GameInstance(GameMode.WORLD_DOMINATION, 5, "src/main/resources/data/maps/world");
+        System.out.println(game.getGameBoard());
     }
 }

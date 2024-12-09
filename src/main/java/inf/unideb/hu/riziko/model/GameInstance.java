@@ -38,13 +38,8 @@ public class GameInstance {
 
     //őrület
     private void addPlayer() {
-        switch (players.size()) {
-            case 0: players.add(new Player(PlayerID.PLAYER1));
-            case 1: players.add(new Player(PlayerID.PLAYER2));
-            case 2: players.add(new Player(PlayerID.PLAYER3));
-            case 3: players.add(new Player(PlayerID.PLAYER4));
-            case 4: players.add(new Player(PlayerID.PLAYER5));
-            case 5: players.add(new Player(PlayerID.PLAYER6));
+        if (players.size() < PlayerID.values().length) {
+            players.add(new Player(PlayerID.values()[players.size()]));
         }
     }
 
@@ -57,12 +52,13 @@ public class GameInstance {
         territoryCardDeck = new CardDeck(loader.loadDeck());
 
         players = new ArrayList<Player>();
-        for (int i = playerCount; i > 0; i--) {
+        for (int i = 0; i < playerCount; i++) {
             addPlayer();
+            System.out.println(players);
         }
         currentTurn = new Turn(PlayerID.PLAYER1);
 
-        gameBoard.distributeTerritories(players.stream().map(Player::getID).toList());
+        gameBoard.distributeTerritories(players.stream().map(Player::getID).collect(Collectors.toCollection(ArrayList::new)));
     }
 
     public void startGame() {
