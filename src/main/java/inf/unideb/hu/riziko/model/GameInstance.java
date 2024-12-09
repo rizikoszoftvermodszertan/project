@@ -14,7 +14,7 @@ public class GameInstance {
         GAMEPLAY,
         FINISHED
     }
-    private Logger gameLogger = LogManager.getLogger(GameInstance.class);
+    private final Logger gameLogger = LogManager.getLogger(GameInstance.class);
     @Getter
     private GamePhase gamePhase;
     @Getter
@@ -115,6 +115,9 @@ public class GameInstance {
             gamePhase = GamePhase.FINISHED;
         }
         currentTurn.advancePlayer();
+        if (currentTurn.getActivePlayer().value() > players.size()) {
+            currentTurn.resetActivePlayer();
+        }
     }
 
     private boolean checkIfGameOver() {

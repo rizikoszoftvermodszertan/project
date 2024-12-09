@@ -19,7 +19,7 @@ public enum PlayerID {
     PlayerID(Integer value) {
         this.value = value;
     }
-    private Integer value() {
+    public Integer value() {
         return value;
     }
 }

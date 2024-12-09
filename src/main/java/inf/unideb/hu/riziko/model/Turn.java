@@ -37,7 +37,10 @@ public class Turn {
         }
     }
 
-    //TODO: ne lehessen nem létező játékosnak adni a kört!!
+    public void resetActivePlayer() {
+        this.activePlayer = PlayerID.PLAYER1;
+    }
+
     public void advancePlayer() {
         this.currentState = TurnState.DEPLOYMENT;
         switch (this.activePlayer) {
