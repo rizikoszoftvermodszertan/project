@@ -113,11 +113,41 @@ public class GameInstance {
                 .orElseThrow(() -> new IllegalStateException("Nincs aktív játékos a körben."));
     }
 
-    private void startCombat(String attacker, String defender) {
+    /**
+     * Elindít egy harcot két terület között.
+     * @param attacker támadó terület (NEM JÁTÉKOS) neve.
+     * @param defender védő terület (NEM JÁTÉKOS) neve.
+     */
+    private void attack(String attacker, String defender) {
+        if (gameBoard.findTerritoryByName(attacker).getOwner() == gameBoard.findTerritoryByName(defender).getOwner()){
+            gameLogger.error(attacker + " és " + defender + " területet ugyanaz irányítja!");
+            return;
+        }
+        if (!gameBoard.isAdjacent(attacker, defender)) {
+            gameLogger.error(attacker + " és " + defender + " nem szomszédosak!");
+            return;
+        }
         Combat combat = new Combat(gameBoard.findTerritoryByName(attacker), gameBoard.findTerritoryByName(defender));
         combat.resolveCombat();
         gameBoard.updateTerritory(attacker, combat.getAttackingTerritory());
         gameBoard.updateTerritory(defender, combat.getDefendingTerritory());
+    }
+
+    private void fortify(String origin, String destination, Integer armyCount) {
+        if (gameBoard.findTerritoryByName(origin).getOwner() != gameBoard.findTerritoryByName(destination).getOwner()){
+            gameLogger.error(origin + " és " + destination + " területet nem ugyanaz irányítja!");
+            return;
+        }
+        if (!gameBoard.isAdjacent(origin, destination)) {
+            gameLogger.error(origin + " és " + destination + " nem szomszédosak!");
+            return;
+        }
+        if (armyCount - 1 > gameBoard.findTerritoryByName(origin).getArmyCount()) {
+            gameLogger.error("Legalább egy egységnek maradnia kell " + origin + " területen!");
+            return;
+        }
+        gameBoard.findTerritoryByName(origin).removeUnits(armyCount);
+        gameBoard.findTerritoryByName(destination).addUnits(armyCount);
     }
 
     private void concludeTurn() {
