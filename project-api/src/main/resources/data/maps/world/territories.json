@@ -1,0 +1,170 @@
+[
+  {
+    "name": "Territory_Alaska",
+    "id": 0
+  },
+  {
+    "name": "Territory_NWT",
+    "id": 1
+  },
+  {
+    "name": "Territory_Greenland",
+    "id": 2
+  },
+  {
+    "name": "Territory_Alberta",
+    "id": 3
+  },
+  {
+    "name": "Territory_Ontario",
+    "id": 4
+  },
+  {
+    "name": "Territory_Quebec",
+    "id": 5
+  },
+  {
+    "name": "Territory_Western_US",
+    "id": 6
+  },
+  {
+    "name": "Territory_Eastern_US",
+    "id": 7
+  },
+  {
+    "name": "Territory_Central_America",
+    "id": 8
+  },
+  {
+    "name": "Territory_Iceland",
+    "id": 9
+  },
+  {
+    "name": "Territory_Scandinavia",
+    "id": 10
+  },
+  {
+    "name": "Territory_Ukraine",
+    "id": 11
+  },
+  {
+    "name": "Territory_Great_Britain",
+    "id": 12
+  },
+  {
+    "name": "Territory_Northern_Europe",
+    "id": 13
+  },
+  {
+    "name": "Territory_Western_Europe",
+    "id": 14
+  },
+  {
+    "name": "Territory_Southern_Europe",
+    "id": 15
+  },
+  {
+    "name": "Territory_Ural",
+    "id": 16
+  },
+  {
+    "name": "Territory_Siberia",
+    "id": 17
+  },
+  {
+    "name": "Territory_Yakutsk",
+    "id": 18
+  },
+  {
+    "name": "Territory_Vladivostok",
+    "id": 19
+  },
+  {
+    "name": "Territory_Afghanistan",
+    "id": 20
+  },
+  {
+    "name": "Territory_China",
+    "id": 21
+  },
+  {
+    "name": "Territory_Mongolia",
+    "id": 22
+  },
+  {
+    "name": "Territory_Irkutsk",
+    "id": 23
+  },
+  {
+    "name": "Territory_Middle_East",
+    "id": 24
+  },
+  {
+    "name": "Territory_India",
+    "id": 25
+  },
+  {
+    "name": "Territory_Siam",
+    "id": 26
+  },
+  {
+    "name": "Territory_Japan",
+    "id": 27
+  },
+  {
+    "name": "Territory_Venezuela",
+    "id": 28
+  },
+  {
+    "name": "Territory_Peru",
+    "id": 29
+  },
+  {
+    "name": "Territory_Brazil",
+    "id": 30
+  },
+  {
+    "name": "Territory_Argentina",
+    "id": 31
+  },
+  {
+    "name": "Territory_North_Africa",
+    "id": 32
+  },
+  {
+    "name": "Territory_Egypt",
+    "id": 33
+  },
+  {
+    "name": "Territory_East_Africa",
+    "id": 34
+  },
+  {
+    "name": "Territory_Congo",
+    "id": 35
+  },
+  {
+    "name": "Territory_Madagascar",
+    "id": 36
+  },
+  {
+    "name": "Territory_South_Africa",
+    "id": 37
+  },
+  {
+    "name": "Territory_Indonesia",
+    "id": 38
+  },
+  {
+    "name": "Territory_New_Guinea",
+    "id": 39
+  },
+  {
+    "name": "Territory_Western_Australia",
+    "id": 40
+  },
+  {
+    "name": "Territory_Eastern_Australia",
+    "id": 41
+  }
+]

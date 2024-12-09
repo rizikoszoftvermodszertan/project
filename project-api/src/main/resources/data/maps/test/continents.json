@@ -1,0 +1,7 @@
+[
+  {
+    "name": "TEST",
+    "territories": ["Territory_Test1", "Territory_Test2"],
+    "armyBonus": 3
+  }
+]

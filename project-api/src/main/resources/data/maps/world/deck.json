@@ -1,0 +1,178 @@
+[
+  {
+    "design": "Infantry",
+    "territory": "Territory_Western_US"
+  },
+  {
+    "design": "Infantry",
+    "territory": "Territory_North_Africa"
+  },
+  {
+    "design": "Infantry",
+    "territory": "Territory_Madagascar"
+  },
+  {
+    "design": "Infantry",
+    "territory": "Territory_Western_Europe"
+  },
+  {
+    "design": "Infantry",
+    "territory": "Territory_Japan"
+  },
+  {
+  "design": "Infantry",
+  "territory": "Territory_Ukraine"
+  },
+  {
+    "design": "Infantry",
+    "territory": "Territory_Iceland"
+  },
+  {
+    "design": "Infantry",
+    "territory": "Territory_Alaska"
+  },
+  {
+    "design": "Infantry",
+    "territory": "Territory_Alberta"
+  },
+  {
+    "design": "Infantry",
+    "territory": "Territory_Eastern_Australia"
+  },
+  {
+    "design": "Infantry",
+    "territory": "Territory_Egypt"
+  },
+  {
+    "design": "Infantry",
+    "territory": "Territory_Afghanistan"
+  },
+  {
+    "design": "Infantry",
+    "territory": "Territory_India"
+  },
+  {
+    "design": "Infantry",
+    "territory": "Territory_Argentina"
+  },
+  {
+    "design": "Cavalry",
+    "territory": "Territory_Vladivostok"
+  },
+  {
+    "design": "Cavalry",
+    "territory": "Territory_Ontario"
+  },
+  {
+    "design": "Cavalry",
+    "territory": "Territory_Peru"
+  },
+  {
+    "design": "Cavalry",
+    "territory": "Territory_Northern_Europe"
+  },
+  {
+    "design": "Cavalry",
+    "territory": "Territory_China"
+  },
+  {
+    "design": "Cavalry",
+    "territory": "Territory_Southern_Europe"
+  },
+  {
+    "design": "Cavalry",
+    "territory": "Territory_Ural"
+  },
+  {
+    "design": "Cavalry",
+    "territory": "Territory_New_Guinea"
+  },
+  {
+    "design": "Cavalry",
+    "territory": "Territory_Congo"
+  },
+  {
+    "design": "Cavalry",
+    "territory": "Territory_Indonesia"
+  },
+  {
+    "design": "Cavalry",
+    "territory": "Territory_Great_Britain"
+  },
+  {
+    "design": "Cavalry",
+    "territory": "Territory_Central_America"
+  },
+  {
+    "design": "Cavalry",
+    "territory": "Territory_Yakutsk"
+  },
+  {
+    "design": "Cavalry",
+    "territory": "Territory_Greenland"
+  },
+  {
+    "design": "Artillery",
+    "territory": "Territory_Quebec"
+  },
+  {
+    "design": "Artillery",
+    "territory": "Territory_East_Africa"
+  },
+  {
+    "design": "Artillery",
+    "territory": "Territory_Ukraine"
+  },
+  {
+    "design": "Artillery",
+    "territory": "Territory_Siam"
+  },
+  {
+    "design": "Artillery",
+    "territory": "Territory_Venezuela"
+  },
+  {
+    "design": "Artillery",
+    "territory": "Territory_Middle_East"
+  },
+  {
+    "design": "Artillery",
+    "territory": "Territory_Western_Australia"
+  },
+  {
+    "design": "Artillery",
+    "territory": "Territory_Eastern_US"
+  },
+  {
+    "design": "Artillery",
+    "territory": "Territory_Siberia"
+  },
+  {
+    "design": "Artillery",
+    "territory": "Territory_South_Africa"
+  },
+  {
+    "design": "Artillery",
+    "territory": "Territory_NWT"
+  },
+  {
+    "design": "Artillery",
+    "territory": "Territory_Scandinavia"
+  },
+  {
+    "design": "Artillery",
+    "territory": "Territory_Scandinavia"
+  },
+  {
+    "design": "Artillery",
+    "territory": "Territory_Mongolia"
+  },
+  {
+    "design": "Wild",
+    "territory": "NONE"
+  },
+  {
+    "design": "Wild",
+    "territory": "NONE"
+  }
+]
