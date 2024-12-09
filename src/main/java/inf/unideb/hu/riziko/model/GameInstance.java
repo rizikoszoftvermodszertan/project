@@ -1,6 +1,7 @@
 package inf.unideb.hu.riziko.model;
 
 import inf.unideb.hu.riziko.model.loader.MapLoader;
+import inf.unideb.hu.riziko.model.map.Territory;
 import lombok.Getter;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -116,15 +117,31 @@ public class GameInstance {
         if (checkIfGameOver()) {
             gamePhase = GamePhase.FINISHED;
         }
+
         currentTurn.advancePlayer();
         if (currentTurn.getActivePlayer().value() > getPlayerCount()) {
             currentTurn.resetActivePlayer();
         }
     }
 
+    /**
+     * Ellenőrzi, hogy véget ért-e a játék.
+     */
     private boolean checkIfGameOver() {
-        // Implementáció eldönti, hogy a játék véget ért-e
-        return false;
+        //TODO: más gamemode-ok???
+        return gameBoard.getTerritories().values().stream()
+                .map(Territory::getOwner)
+                .distinct()
+                .filter(x -> x!= PlayerID.NEUTRAL)
+                .toList().size() == 1;
+    }
+
+    private void calculatePlayerIncomes() {
+        for(var p : players) {
+            p.setArmyIncome(
+                    gameBoard.getTerritories().keySet().size() / 3
+                            + (int) gameBoard.getContinents().stream().filter(c -> c.getOwner() == p.getID()).count());
+        }
     }
 
     public static class CardDeck {
