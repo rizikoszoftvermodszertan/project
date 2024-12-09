@@ -18,6 +18,7 @@ const joinPartyButton = document.getElementById("joinParty")
 const leavePartyButton = document.getElementById("leaveParty")
 const gameModeMenu = document.getElementById("gameModeMenu")
 const gameModeSelect = document.getElementById("gameModeSelect")
+const startGameButton = document.getElementById("startGame")
 
 //Itt kezeljük ha a server frissítésre késztet.
 sockJs.onmessage = function (e) {
@@ -26,12 +27,13 @@ sockJs.onmessage = function (e) {
         case 'updatelobby':
             updatePartyUI()
             break;
-
-        case 'updateGame':
-            refreshGameState()
-            updateGameUI()
-            break;
     }
+}
+
+async function updateUIState(){
+    var lobby = await getLobby()
+
+
 }
 
 async function getLobby(){
@@ -149,8 +151,18 @@ async function updatePartyUI() {
 }
 
 /**
- * Kattintás események
+ * Kattintás események a menühöz
  */
+
+startGameButton.addEventListener("click", async () => {
+    const newGameMode = gameModeSelect.value;
+    const url = baseUrl + "/lobby/" + lobbyId + "/start";
+    const response = await fetch(url, {method: "POST"});
+    if (!response.ok) {
+        console.log(response.status);
+        return;
+    }
+})
 
 gameModeSelect.addEventListener("change", async (e) => {
     const newGameMode = gameModeSelect.value;

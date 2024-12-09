@@ -16,9 +16,9 @@ public class Fortify {
     }
     private void ResolveFortify()
     {
-        if(Movefrom.removeUnits(Amount))
+        /*if(Movefrom.removeUnits(Amount))
         {
             Moveto.AddUnits(Amount);
-        }
+        }*/
     }
 }

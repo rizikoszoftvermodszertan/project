@@ -7,6 +7,7 @@ import inf.unideb.hu.riziko.model.Lobby.User;
 import inf.unideb.hu.riziko.model.actions.Deploy;
 import inf.unideb.hu.riziko.model.actions.Fortify;
 import inf.unideb.hu.riziko.model.map.Territory;
+import inf.unideb.hu.riziko.repository.LobbyRepository;
 import inf.unideb.hu.riziko.requests.CombatRequest;
 import inf.unideb.hu.riziko.requests.DeployRequest;
 import inf.unideb.hu.riziko.requests.FortifyRequest;
@@ -18,11 +19,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
+
 @RestController
 public class ApiController {
 
-    LobbyService lobbyService;
+    //LobbyService lobbyService;
+    LobbyRepository lobbyRepository;
 
+    public ApiController(LobbyRepository lobbyRepository) {this.lobbyRepository = lobbyRepository;}
+    /*
     public void FindLobbyService()
     {
         if(lobbyService!=null)
@@ -31,7 +37,7 @@ public class ApiController {
         }
         lobbyService=LobbyService.getInstance();
     }
-
+    */
     private GameInstance FetchGameInstance(Lobby lobby)
     {
 
@@ -42,6 +48,7 @@ public class ApiController {
         return lobby.getGameInstance();
     }
 
+    /*
     public boolean FetchService()
     {
         FindLobbyService();
@@ -53,28 +60,26 @@ public class ApiController {
         System.out.println("LobbyService is found");
         return true;
     }
+     */
 
     @PostMapping("/game/combat")
     public ResponseEntity<String> ResolveCombat(@RequestBody CombatRequest request)//nem nézi meg hogy szomszédos területek-e
     {
-        FetchService();
-        GameInstance gameInstance=FetchGameInstance(lobbyService.GetLobbyByLoobyID(request.getLobbyID()));
+        //FetchService();
+        GameInstance gameInstance=FetchGameInstance(lobbyRepository.getLobby(request.getLobbyID()));
         if(gameInstance==null)
         {
             return ResponseEntity.badRequest().body("Game is not found or started yet");
         }
 
-        String attackingterritoryname=request.getAttackingterritoryname();
-        String defendingterritoryname=request.getDefendingterritoryname();
-        if(attackingterritoryname==null||defendingterritoryname==null)
+        String attacker=request.getAttackingterritoryname();
+        String defender=request.getDefendingterritoryname();
+        if(attacker==null||defender==null)
         {
             System.out.println("attackingterritoryname or defendingterritoryname is null");
             return ResponseEntity.badRequest().body("attackingterritoryname or defendingterritoryname is null");
         }
-        GameBoard gameBoard=gameInstance.getGameBoard();
-        Territory attackingterritory=gameBoard.findTerritoryByName(attackingterritoryname);
-        Territory defendingterritory=gameBoard.findTerritoryByName(defendingterritoryname);
-        Combat combat=new Combat(attackingterritory,defendingterritory);
+        gameInstance.attack(attacker, defender);
         return ResponseEntity.ok().body("Combat resolved");
 
 
@@ -83,47 +88,41 @@ public class ApiController {
     @PostMapping("/game/fortify")
     public ResponseEntity<String> ResolveFortify(@RequestBody FortifyRequest request)
     {
-        FetchService();
-        GameInstance gameInstance=FetchGameInstance(lobbyService.GetLobbyByLoobyID(request.getLobbyID()));
+        //FetchService();
+        GameInstance gameInstance=FetchGameInstance(lobbyRepository.getLobby(request.getLobbyID()));
         if(gameInstance==null)
         {
             return ResponseEntity.badRequest().body("Game is not found or started yet");
         }
-        String movefromname= request.getFrom();
-        String movetoname=request.getTo();
-        if(movefromname==null||movetoname==null)//todo megteheti-e a lépést
+        String origin = request.getFrom();
+        String destination = request.getTo();
+        int amount = request.getAmount();
+        if(origin==null||destination==null)//todo megteheti-e a lépést
         {
             System.out.println("movefromname or movetoname is null");
             return ResponseEntity.badRequest().body("movefromname or movetoname is null");
         }
-        GameBoard gameBoard=gameInstance.getGameBoard();
-        Territory movefromterritory=gameBoard.findTerritoryByName(movefromname);
-        Territory movetoterritory=gameBoard.findTerritoryByName(movetoname);
-        Fortify fortify=new Fortify(movefromterritory,movetoterritory, request.getAmount());
+
+        gameInstance.fortify(origin, destination, amount);
         return ResponseEntity.ok().body("Fortify resolved");
     }
 
     @PostMapping("/game/deploy")
     public ResponseEntity<String> ResolveDeploy(@RequestBody DeployRequest request)
     {
-        FetchService();
-        GameInstance gameInstance=FetchGameInstance(lobbyService.GetLobbyByLoobyID(request.getLobbyID()));
+        //FetchService();
+        GameInstance gameInstance=FetchGameInstance(lobbyRepository.getLobby(request.getLobbyID()));
         if(gameInstance==null)
         {
             return ResponseEntity.badRequest().body("Game is not found or started yet");
         }
-        String deployname=request.getDeploy();
-        if (deployname==null)
-        {
-            System.out.println("deploy is null");
-            return ResponseEntity.badRequest().body("deploy is null");
-        }
-        Lobby lobby=lobbyService.GetLobbyByUser(lobbyService.GetUserByUserID(request.getUserID()));
-        PlayerID currentPlayer= lobby.getPlayerId(request.getUserID());
-        Player player=gameInstance.getPlayerByID(currentPlayer);
-        GameBoard gameBoard=gameInstance.getGameBoard();
-        Territory deployterritory=gameBoard.findTerritoryByName(deployname);
-        Deploy deploy=new Deploy(deployterritory,request.getAmount(),player);
+        request.getDeployments()
+                .forEach((asd) -> {
+                    String to = asd.getDeploy();
+                    int amount = asd.getAmount();
+                    gameInstance.getGameBoard().getTerritories().get(to).addUnits(amount);
+                });
+
         return ResponseEntity.ok().body("Deploy resolved");
     }
 }

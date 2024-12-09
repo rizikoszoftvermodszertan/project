@@ -1,4 +1,4 @@
-import inf.unideb.hu.riziko.model.Combat;
+import inf.unideb.hu.riziko.model.actions.Combat;
 import inf.unideb.hu.riziko.model.map.Territory;
 import org.junit.jupiter.api.Test;
 
