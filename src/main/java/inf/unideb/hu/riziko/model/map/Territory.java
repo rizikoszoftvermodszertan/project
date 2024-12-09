@@ -23,11 +23,12 @@ public class Territory {
         this.armyCount = 0;
     }
 
-    public Boolean removeUnits(int count) {
-        if (this.armyCount < count)
-        {
-            return false;
-        }
+    public void setProperties(PlayerID owner, Integer armyCount) {
+        this.owner = owner;
+        this.armyCount = armyCount;
+    }
+
+    public void removeUnits(int count) {
         this.armyCount -= count;
         if (this.armyCount < 0)
         {
@@ -39,6 +40,10 @@ public class Territory {
     public void AddUnits(int count)
     {
         this.armyCount+=count;
+    }
+
+    public void addUnits(int count) {
+        this.armyCount += count;
     }
 
     public int getUnitCount() {

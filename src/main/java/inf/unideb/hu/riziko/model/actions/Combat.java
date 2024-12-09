@@ -1,6 +1,8 @@
 package inf.unideb.hu.riziko.model.actions;
 
 import inf.unideb.hu.riziko.model.map.Territory;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,7 +10,9 @@ import java.util.List;
 import java.util.Random;
 
 public class Combat {
+    @Getter
     private Territory attackingTerritory;
+    @Getter
     private Territory defendingTerritory;
 
     public Combat(Territory attackingTerritory, Territory defendingTerritory) {

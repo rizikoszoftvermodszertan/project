@@ -1,12 +1,14 @@
 package inf.unideb.hu.riziko.model;
 
 import inf.unideb.hu.riziko.model.loader.MapLoader;
+import inf.unideb.hu.riziko.model.map.Territory;
 import lombok.Getter;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class GameInstance {
     public enum GamePhase {
@@ -14,7 +16,7 @@ public class GameInstance {
         GAMEPLAY,
         FINISHED
     }
-    private Logger gameLogger = LogManager.getLogger(GameInstance.class);
+    private final Logger gameLogger = LogManager.getLogger(GameInstance.class);
     @Getter
     private GamePhase gamePhase;
     @Getter
@@ -56,10 +58,16 @@ public class GameInstance {
         for (int i = playerCount; i > 0; i--) {
             addPlayer();
         }
-
         currentTurn = new Turn(PlayerID.PLAYER1);
+
+        gameBoard.distributeTerritories(players.stream().map(Player::getID).toList());
     }
 
+    public void startGame() {
+        if (gamePhase != GamePhase.SETUP) return;
+        advanceGamePhase();
+        startTurn();
+    }
     public void advanceGamePhase() {
         switch (gamePhase) {
             case SETUP -> gamePhase = GamePhase.GAMEPLAY;
@@ -75,7 +83,7 @@ public class GameInstance {
 
         Player currentPlayer = getCurrentPlayer();
 
-        // Új kártya húzása, ha van még a pakliban
+        // Új kártya húzása, ha van még a pakliban és a játékos megteheti
         if (territoryCardDeck.hasCards() && currentPlayer.hasTakenTerritory()) {
             TerritoryCard newCard = territoryCardDeck.drawCard();
             currentPlayer.addCard(newCard);
@@ -96,11 +104,6 @@ public class GameInstance {
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
-
-        currentTurn.advanceTurnState();
-        if (currentTurn.getActivePlayer() == players.get(0).getID()) {
-            concludeTurn();
-        }
     }
 
     private Player getCurrentPlayer() {
@@ -110,16 +113,74 @@ public class GameInstance {
                 .orElseThrow(() -> new IllegalStateException("Nincs aktív játékos a körben."));
     }
 
+    /**
+     * Elindít egy harcot két terület között.
+     * @param attacker támadó terület (NEM JÁTÉKOS) neve.
+     * @param defender védő terület (NEM JÁTÉKOS) neve.
+     */
+    private void attack(String attacker, String defender) {
+        if (currentTurn.currentState != Turn.TurnState.ATTACK) return;
+        if (gameBoard.findTerritoryByName(attacker).getOwner() == gameBoard.findTerritoryByName(defender).getOwner()){
+            gameLogger.error(attacker + " és " + defender + " területet ugyanaz irányítja!");
+            return;
+        }
+        if (!gameBoard.isAdjacent(attacker, defender)) {
+            gameLogger.error(attacker + " és " + defender + " nem szomszédosak!");
+            return;
+        }
+        Combat combat = new Combat(gameBoard.findTerritoryByName(attacker), gameBoard.findTerritoryByName(defender));
+        combat.resolveCombat();
+        gameBoard.updateTerritory(attacker, combat.getAttackingTerritory());
+        gameBoard.updateTerritory(defender, combat.getDefendingTerritory());
+    }
+
+    private void fortify(String origin, String destination, Integer armyCount) {
+        if (currentTurn.currentState != Turn.TurnState.FORTIFY) return;
+        if (gameBoard.findTerritoryByName(origin).getOwner() != gameBoard.findTerritoryByName(destination).getOwner()){
+            gameLogger.error(origin + " és " + destination + " területet nem ugyanaz irányítja!");
+            return;
+        }
+        if (!gameBoard.isAdjacent(origin, destination)) {
+            gameLogger.error(origin + " és " + destination + " nem szomszédosak!");
+            return;
+        }
+        if (armyCount - 1 > gameBoard.findTerritoryByName(origin).getArmyCount()) {
+            gameLogger.error("Legalább egy egységnek maradnia kell " + origin + " területen!");
+            return;
+        }
+        gameBoard.findTerritoryByName(origin).removeUnits(armyCount);
+        gameBoard.findTerritoryByName(destination).addUnits(armyCount);
+    }
+
     private void concludeTurn() {
         if (checkIfGameOver()) {
             gamePhase = GamePhase.FINISHED;
         }
+
         currentTurn.advancePlayer();
+        if (currentTurn.getActivePlayer().value() > getPlayerCount()) {
+            currentTurn.resetActivePlayer();
+        }
     }
 
+    /**
+     * Ellenőrzi, hogy véget ért-e a játék.
+     */
     private boolean checkIfGameOver() {
-        // Implementáció eldönti, hogy a játék véget ért-e
-        return false;
+        //TODO: más gamemode-ok???
+        return gameBoard.getTerritories().values().stream()
+                .map(Territory::getOwner)
+                .distinct()
+                .filter(x -> x!= PlayerID.NEUTRAL)
+                .toList().size() == 1;
+    }
+
+    private void calculatePlayerIncomes() {
+        for(var p : players) {
+            p.setArmyIncome(
+                    gameBoard.getTerritories().keySet().size() / 3
+                            + (int) gameBoard.getContinents().stream().filter(c -> c.getOwner() == p.getID()).count());
+        }
     }
 
     public static class CardDeck {

@@ -19,13 +19,16 @@ public class Player {
     @NonNull
     private final PlayerID ID;
     @Getter
-    private Territory HQLocation; //Csak a Capital játékmódban!
+    private final Territory HQLocation; //Csak a Capital játékmódban!
     @Getter
     private final Mission mission; //Csak a Secret Mission játékmódban!
     @Getter
     private ArrayList<TerritoryCard> cards;
     @Setter
     private boolean takenTerritory = false;
+    @Getter
+    @Setter
+    private Integer armyIncome = 0;
 
     public boolean hasTakenTerritory() {
         return takenTerritory;

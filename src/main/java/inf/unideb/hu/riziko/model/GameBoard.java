@@ -3,12 +3,15 @@ package inf.unideb.hu.riziko.model;
 import inf.unideb.hu.riziko.datastructures.UnorderedPair;
 import inf.unideb.hu.riziko.model.map.Continent;
 import inf.unideb.hu.riziko.model.map.Territory;
+import jdk.dynalink.Operation;
 import lombok.Getter;
+import lombok.ToString;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A játéktábla reprezentálja a játékmezővel kapcsolatos információkat.
@@ -17,6 +20,7 @@ import java.util.HashSet;
  * Adjacencies: A szomszédos területeket páronként listázza, a Territories String kulcsok szerint.
  */
 
+@ToString
 public class GameBoard {
     private final Logger logger = LogManager.getLogger(GameBoard.class.getName());
     @Getter
@@ -42,7 +46,7 @@ public class GameBoard {
             return continents.stream()
                     .filter(continent -> continent.getTerritories().contains(territoryName))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Territory name not found in any continent!"));
+                    .orElseThrow(() -> new IllegalArgumentException("Territory name " + territoryName + " not found in any continent!"));
         } catch (Exception e) {
             logger.error("Error finding continent by territory name: ", e);
             throw e;
@@ -76,7 +80,7 @@ public class GameBoard {
 
     /**
      * Megváltoztatja a tartomány tulajdonosát, úgy, hogy a kontinens tulajdonát ellenőrzi.
-     * @param province Az elfoglalni kívánt tartomány
+     * @param province Az elfoglalni kívánt tartomány neve
      * @param player Az elfoglaló játékos
      */
     public void changeProvinceOwner(String province, PlayerID player) {
@@ -87,5 +91,91 @@ public class GameBoard {
         catch (Exception e) {
             logger.error(e.toString());
         }
+    }
+
+    public void updateTerritory(String territoryName, Territory territoryData) {
+        if (territoryData.getOwner() != findTerritoryByName(territoryName).getOwner()) {
+            updateContinentOwner(findContinentByTerritoryName(territoryName));
+        }
+        findTerritoryByName(territoryName).setProperties(territoryData.getOwner(), territoryData.getArmyCount());
+    }
+
+    public void distributeTerritories(List<PlayerID> players) {
+        Integer[] armyCount = {40, 35, 30, 25, 20};
+
+        if (players.size() < 2 || players.size() > 6) throw new IllegalArgumentException("Túl kevés vagy túl sok PlayerID megadva");
+        if (players.size() == 2) players.add(PlayerID.NEUTRAL);
+
+        //nyomon tartja, hogy kinél mi van
+        HashMap<PlayerID, ArrayList<String>> territoryByPlayer = new HashMap<>();
+        for (var i : players) territoryByPlayer.put(i, new ArrayList<String>());
+
+        List<String> territoriesQueue = new ArrayList<>(territories.keySet());
+        Collections.shuffle(territoriesQueue);
+
+        //elosztja a területeket
+        while (!territoriesQueue.isEmpty()) {
+            String currentTerr = territoriesQueue.removeFirst();
+            PlayerID currentPlayer = players.getFirst();
+
+            findTerritoryByName(currentTerr).setOwner(currentPlayer);
+            territoryByPlayer.get(currentPlayer).add(currentTerr);
+
+            players.add(players.removeFirst());
+        }
+
+        //a neutral területeknek ad 1 egységet
+        try {
+            territoryByPlayer.get(PlayerID.NEUTRAL).stream()
+                    .map(this::findTerritoryByName)
+                    .forEach(x -> {x.addUnits(1);});
+        }
+        catch (NullPointerException ignored) {} // ha nincs, nem csinál semmit
+
+        for (var p: players) {
+            var unitDivisions = divideRandomly(armyCount[players.size()-1], territoryByPlayer.get(p).size());
+            territoryByPlayer.get(p).stream()
+                    .map(this::findTerritoryByName)
+                    .forEach(x -> {x.addUnits(unitDivisions.removeFirst());});
+        }
+    }
+
+    /**
+     * Segítőfüggvény. Szétosz egy számot n részre véletlenszerűen, úgy, hogy mindenhol legyen legalább 1
+     * @param number elosztandó szám
+     * @param between hányfelé
+     * @return Eredmények listája, mindig between hosszú.
+     */
+    private static ArrayList<Integer> divideRandomly(int number, int between) {
+        ArrayList<Double> division = new ArrayList<>();
+        double totalWeight = 0;
+
+        //súlyozás
+        for (int i = 0; i < between; i++) {
+            double weight = 1 - Math.random();
+            division.add(weight);
+            totalWeight += weight;
+        }
+        System.out.println(division);
+
+        //denormalizálás
+        ArrayList<Integer> division2 = new ArrayList<>();
+        int totalAllocated = 0;
+
+        for (int i = 0; i < between; i++) {
+            int part = (int) ((division.get(i) / totalWeight) * (number - between));
+            division2.add(part + 1);
+            totalAllocated += part + 1;
+        }
+
+        int remaining = number - totalAllocated;
+
+        //maradék elosztása
+        for (int i = 0; i < remaining; i++) {
+            int bucket = (int) (Math.random() * between);
+            division2.set(bucket, division2.get(bucket) + 1);
+        }
+
+        return division2;
     }
 }
