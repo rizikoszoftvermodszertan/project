@@ -16,6 +16,7 @@ import java.util.*;
 public class Lobby {
     @EqualsAndHashCode.Include
     String lobbyId;
+    @Getter
     HashSet<User> joinedUsers = new HashSet<>();
     User leader;
     GameInstance gameInstance;

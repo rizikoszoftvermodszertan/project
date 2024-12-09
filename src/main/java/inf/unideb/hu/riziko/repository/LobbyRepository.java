@@ -4,6 +4,7 @@ import inf.unideb.hu.riziko.controller.WebSocketController;
 import inf.unideb.hu.riziko.model.GameMode;
 import inf.unideb.hu.riziko.model.Lobby.Lobby;
 import inf.unideb.hu.riziko.model.Lobby.User;
+import inf.unideb.hu.riziko.service.LobbyService;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
@@ -21,6 +22,7 @@ public class LobbyRepository {
     public Lobby createLobby(User user){
         Lobby lobby = new Lobby(user);
         lobbies.add(lobby);
+        LobbyService.getInstance().AddLobby(lobby);
         return lobby;
     }
 
@@ -31,6 +33,7 @@ public class LobbyRepository {
         }
         l.joinLobby(user);
         sendUpdateToLobbyMembers(l);
+        LobbyService.getInstance().JoinLobby(user, lobbyId);
         return l;
     }
 
@@ -48,6 +51,7 @@ public class LobbyRepository {
         l.leaveLobby(user.getUserId());
         if((long) l.getJoinedUsers().size() == 0){
             lobbies.remove(l);
+            LobbyService.getInstance().RemoveLobby(l);
         }
     }
 

@@ -23,9 +23,22 @@ public class Territory {
         this.armyCount = 0;
     }
 
-    public void removeUnits(int count) {
+    public Boolean removeUnits(int count) {
+        if (this.armyCount < count)
+        {
+            return false;
+        }
         this.armyCount -= count;
-        if (this.armyCount < 0) this.armyCount = 0;
+        if (this.armyCount < 0)
+        {
+            this.armyCount = 0;
+        }
+        return true;
+    }
+
+    public void AddUnits(int count)
+    {
+        this.armyCount+=count;
     }
 
     public int getUnitCount() {

@@ -1,4 +1,4 @@
-package inf.unideb.hu.riziko.model;
+package inf.unideb.hu.riziko.model.actions;
 
 import inf.unideb.hu.riziko.model.map.Territory;
 
@@ -11,9 +11,10 @@ public class Combat {
     private Territory attackingTerritory;
     private Territory defendingTerritory;
 
-    public void Combat(Territory attackingTerritory, Territory defendingTerritory) {
+    public Combat(Territory attackingTerritory, Territory defendingTerritory) {
         this.attackingTerritory = attackingTerritory;
         this.defendingTerritory = defendingTerritory;
+        resolveCombat();
     }
 
     public void resolveCombat() {

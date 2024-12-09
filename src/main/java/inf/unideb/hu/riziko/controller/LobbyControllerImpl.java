@@ -4,6 +4,7 @@ import inf.unideb.hu.riziko.model.Lobby.Lobby;
 import inf.unideb.hu.riziko.model.Lobby.User;
 import inf.unideb.hu.riziko.repository.LobbyRepository;
 import inf.unideb.hu.riziko.repository.UserRepository;
+import inf.unideb.hu.riziko.service.LobbyService;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
