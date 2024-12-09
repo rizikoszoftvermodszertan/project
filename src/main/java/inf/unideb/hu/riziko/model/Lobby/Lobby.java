@@ -16,6 +16,7 @@ import java.util.*;
 public class Lobby {
     @EqualsAndHashCode.Include
     String lobbyId;
+    @Getter
     HashSet<User> joinedUsers = new HashSet<>();
     User leader;
     GameInstance gameInstance;
@@ -69,5 +70,10 @@ public class Lobby {
             leader = joinedUsers.stream().findFirst().orElseGet(()->null);
         }
         size = joinedUsers.size();
+    }
+
+    public PlayerID getPlayerId(String UserID)
+    {
+        return players.get(UserID);
     }
 }

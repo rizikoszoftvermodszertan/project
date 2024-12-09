@@ -128,10 +128,10 @@ public class GameInstance {
             gameLogger.error(attacker + " és " + defender + " nem szomszédosak!");
             return;
         }
-        Combat combat = new Combat(gameBoard.findTerritoryByName(attacker), gameBoard.findTerritoryByName(defender));
+        /*Combat combat = new Combat(gameBoard.findTerritoryByName(attacker), gameBoard.findTerritoryByName(defender));
         combat.resolveCombat();
         gameBoard.updateTerritory(attacker, combat.getAttackingTerritory());
-        gameBoard.updateTerritory(defender, combat.getDefendingTerritory());
+        gameBoard.updateTerritory(defender, combat.getDefendingTerritory());*/ //ez apiban megvan már csinálva
     }
 
     private void fortify(String origin, String destination, Integer armyCount) {
@@ -204,5 +204,18 @@ public class GameInstance {
             }
             return cards.remove(cards.size() - 1);
         }
+    }
+
+    public Player getPlayerByID(PlayerID id)
+    {
+        for (Player p : players)
+        {
+            if(p.getID().equals(id))
+            {
+                return p;
+            }
+        }
+
+    return null;
     }
 }

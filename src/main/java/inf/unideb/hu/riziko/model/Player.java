@@ -106,4 +106,9 @@ public class Player {
         }
         return new ArrayList<>();  // Ha nincs érvényes szett
     }
+
+    public void IncreaseArmySize(int amount)
+    {
+        armyIncome += amount;
+    }
 }
