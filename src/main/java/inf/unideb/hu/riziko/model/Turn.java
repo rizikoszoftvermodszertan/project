@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  */
 @ToString
 public class Turn {
-    private enum TurnState {
+    public enum TurnState {
         DEPLOYMENT,
         ATTACK,
         FORTIFY

@@ -119,6 +119,7 @@ public class GameInstance {
      * @param defender védő terület (NEM JÁTÉKOS) neve.
      */
     private void attack(String attacker, String defender) {
+        if (currentTurn.currentState != Turn.TurnState.ATTACK) return;
         if (gameBoard.findTerritoryByName(attacker).getOwner() == gameBoard.findTerritoryByName(defender).getOwner()){
             gameLogger.error(attacker + " és " + defender + " területet ugyanaz irányítja!");
             return;
@@ -134,6 +135,7 @@ public class GameInstance {
     }
 
     private void fortify(String origin, String destination, Integer armyCount) {
+        if (currentTurn.currentState != Turn.TurnState.FORTIFY) return;
         if (gameBoard.findTerritoryByName(origin).getOwner() != gameBoard.findTerritoryByName(destination).getOwner()){
             gameLogger.error(origin + " és " + destination + " területet nem ugyanaz irányítja!");
             return;
