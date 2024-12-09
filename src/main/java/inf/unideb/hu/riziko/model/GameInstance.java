@@ -63,6 +63,11 @@ public class GameInstance {
         gameBoard.distributeTerritories(players.stream().map(Player::getID).toList());
     }
 
+    public void startGame() {
+        if (gamePhase != GamePhase.SETUP) return;
+        advanceGamePhase();
+        startTurn();
+    }
     public void advanceGamePhase() {
         switch (gamePhase) {
             case SETUP -> gamePhase = GamePhase.GAMEPLAY;
@@ -78,7 +83,7 @@ public class GameInstance {
 
         Player currentPlayer = getCurrentPlayer();
 
-        // Új kártya húzása, ha van még a pakliban
+        // Új kártya húzása, ha van még a pakliban és a játékos megteheti
         if (territoryCardDeck.hasCards() && currentPlayer.hasTakenTerritory()) {
             TerritoryCard newCard = territoryCardDeck.drawCard();
             currentPlayer.addCard(newCard);
@@ -99,11 +104,6 @@ public class GameInstance {
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
-
-        currentTurn.advanceTurnState();
-        if (currentTurn.getActivePlayer() == players.get(0).getID()) {
-            concludeTurn();
-        }
     }
 
     private Player getCurrentPlayer() {
@@ -111,6 +111,13 @@ public class GameInstance {
                 .filter(player -> player.getID() == currentTurn.getActivePlayer())
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Nincs aktív játékos a körben."));
+    }
+
+    private void startCombat(String attacker, String defender) {
+        Combat combat = new Combat(gameBoard.findTerritoryByName(attacker), gameBoard.findTerritoryByName(defender));
+        combat.resolveCombat();
+        gameBoard.updateTerritory(attacker, combat.getAttackingTerritory());
+        gameBoard.updateTerritory(defender, combat.getDefendingTerritory());
     }
 
     private void concludeTurn() {

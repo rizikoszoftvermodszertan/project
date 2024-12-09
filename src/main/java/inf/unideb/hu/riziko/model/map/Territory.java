@@ -23,6 +23,11 @@ public class Territory {
         this.armyCount = 0;
     }
 
+    public void setProperties(PlayerID owner, Integer armyCount) {
+        this.owner = owner;
+        this.armyCount = armyCount;
+    }
+
     public void removeUnits(int count) {
         this.armyCount -= count;
         if (this.armyCount < 0) this.armyCount = 0;

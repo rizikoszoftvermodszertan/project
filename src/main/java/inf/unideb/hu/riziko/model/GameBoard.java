@@ -93,6 +93,13 @@ public class GameBoard {
         }
     }
 
+    public void updateTerritory(String territoryName, Territory territoryData) {
+        if (territoryData.getOwner() != findTerritoryByName(territoryName).getOwner()) {
+            updateContinentOwner(findContinentByTerritoryName(territoryName));
+        }
+        findTerritoryByName(territoryName).setProperties(territoryData.getOwner(), territoryData.getArmyCount());
+    }
+
     public void distributeTerritories(List<PlayerID> players) {
         Integer[] armyCount = {40, 35, 30, 25, 20};
 
@@ -111,7 +118,7 @@ public class GameBoard {
             String currentTerr = territoriesQueue.removeFirst();
             PlayerID currentPlayer = players.getFirst();
 
-            changeProvinceOwner(currentTerr, currentPlayer);
+            findTerritoryByName(currentTerr).setOwner(currentPlayer);
             territoryByPlayer.get(currentPlayer).add(currentTerr);
 
             players.add(players.removeFirst());
