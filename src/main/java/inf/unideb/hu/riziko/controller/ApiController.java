@@ -14,10 +14,7 @@ import inf.unideb.hu.riziko.requests.FortifyRequest;
 import inf.unideb.hu.riziko.service.LobbyService;
 import org.apache.coyote.Request;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
@@ -85,6 +82,11 @@ public class ApiController {
 
     }
 
+    @PostMapping("/lobby/{lobbyId}/end")
+    public void endPhase(@PathVariable String lobbyId){
+        lobbyRepository.getLobby(lobbyId).getGameInstance().getCurrentTurn().advanceTurnState();
+    }
+
     @PostMapping("/game/fortify")
     public ResponseEntity<String> ResolveFortify(@RequestBody FortifyRequest request)
     {
@@ -116,12 +118,8 @@ public class ApiController {
         {
             return ResponseEntity.badRequest().body("Game is not found or started yet");
         }
-        request.getDeployments()
-                .forEach((asd) -> {
-                    String to = asd.getDeploy();
-                    int amount = asd.getAmount();
-                    gameInstance.getGameBoard().getTerritories().get(to).addUnits(amount);
-                });
+        gameInstance.deploy(request.getDeployments());
+
 
         return ResponseEntity.ok().body("Deploy resolved");
     }

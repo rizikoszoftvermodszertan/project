@@ -32,6 +32,7 @@ public class Lobby {
         lobbyId = UUID.randomUUID().toString();
         joinedUsers.add(user);
         size = joinedUsers.size();
+        gameMode = GameMode.WORLD_DOMINATION;
     }
 
     public void joinLobby(User user){
@@ -43,7 +44,7 @@ public class Lobby {
     }
 
     public void startGame(){
-        gameInstance = new GameInstance(gameMode, size, "/data/maps/world");
+        gameInstance = new GameInstance(gameMode, size, "src/main/resources/data/maps/world");
         if(isStarted){
             return;
         }

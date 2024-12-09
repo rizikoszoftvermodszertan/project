@@ -34,7 +34,7 @@ public class Territory {
         {
             this.armyCount = 0;
         }
-        return true;
+        return;
     }
 
     public void AddUnits(int count)

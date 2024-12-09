@@ -3,6 +3,7 @@ package inf.unideb.hu.riziko.model;
 import inf.unideb.hu.riziko.model.actions.Combat;
 import inf.unideb.hu.riziko.model.loader.MapLoader;
 import inf.unideb.hu.riziko.model.map.Territory;
+import inf.unideb.hu.riziko.requests.DeployRequest;
 import lombok.Getter;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -152,6 +153,15 @@ public class GameInstance {
         }
         gameBoard.findTerritoryByName(origin).removeUnits(armyCount);
         gameBoard.findTerritoryByName(destination).addUnits(armyCount);
+    }
+
+    public void deploy(List<DeployRequest.Deployment> deployments) {
+        deployments.forEach((deployment) -> {
+            String to = deployment.getDeploy();
+            int amount = deployment.getAmount();
+            this.getGameBoard().getTerritories().get(to).addUnits(amount);
+        });
+        currentTurn.advanceTurnState();
     }
 
     private void concludeTurn() {

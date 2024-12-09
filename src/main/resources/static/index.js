@@ -19,21 +19,28 @@ const leavePartyButton = document.getElementById("leaveParty")
 const gameModeMenu = document.getElementById("gameModeMenu")
 const gameModeSelect = document.getElementById("gameModeSelect")
 const startGameButton = document.getElementById("startGame")
+const error = document.getElementById("errors")
+const partyMenu = document.getElementById("partyMenu")
 
 //Itt kezeljük ha a server frissítésre késztet.
 sockJs.onmessage = function (e) {
     console.log("socketmessage:", e.data)
     switch (e.data){
         case 'updatelobby':
-            updatePartyUI()
+            updateUI()
             break;
     }
 }
 
-async function updateUIState(){
+async function updateUI(){
     var lobby = await getLobby()
-
-
+    if(lobby.gameStarted){
+        closeMenuUI()
+        updatePartyUI()
+        return
+    }
+    refreshGameState()
+    updateGameUI()
 }
 
 async function getLobby(){
@@ -84,6 +91,14 @@ function closePartyUI(){
     gameModeMenu.hidden = true;
 }
 
+function closeMenuUI(){
+    partyMenu.hidden = true;
+}
+
+function openMenuUI(){
+    partyMenu.hidden = false;
+}
+
 //A parti táblázátot állítja, illetve az aktív gombokat/inputokat
 async function updatePartyUI() {
     if(lobbyId == null){
@@ -107,6 +122,7 @@ async function updatePartyUI() {
     leavePartyButton.disabled = false;
     gameModeMenu.hidden = false;
     gameModeSelect.disabled = true;
+    startGameButton.disabled = true;
 
     const isLeader = user.userId === lobby.leader.userId
     const leaderActionHeader = isLeader ? "<th>Akció</th>" : ""
@@ -123,7 +139,7 @@ async function updatePartyUI() {
     })
 
     const options = gameModeSelect.getElementsByTagName("option")
-    const gameMode = lobby.gameInstance.gameMode
+    const gameMode = lobby.gameMode
     for(let i = 0; i < options.length; i++){
         if(options[i].value === gameMode){
             console.log(gameMode)
@@ -134,6 +150,7 @@ async function updatePartyUI() {
 
     if(isLeader){
         gameModeSelect.disabled = false;
+        startGameButton.disabled = false;
 
         const kickButtons = document.getElementsByClassName("kickButton")
         for(let i = 0; i < kickButtons.length; i++) {
