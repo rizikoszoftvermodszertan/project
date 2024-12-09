@@ -39,7 +39,7 @@ public class GameInstance {
     //őrület
     private void addPlayer() {
         if (players.size() < PlayerID.values().length) {
-            players.add(new Player(PlayerID.values()[players.size()]));
+            players.add(new Player(PlayerID.values()[players.size()+1]));
         }
     }
 

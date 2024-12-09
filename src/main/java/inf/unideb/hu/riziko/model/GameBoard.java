@@ -129,6 +129,7 @@ public class GameBoard {
             territoryByPlayer.get(PlayerID.NEUTRAL).stream()
                     .map(this::findTerritoryByName)
                     .forEach(x -> {x.addUnits(1);});
+            players.removeLast();
         }
         catch (NullPointerException ignored) {} // ha nincs, nem csinál semmit
 
