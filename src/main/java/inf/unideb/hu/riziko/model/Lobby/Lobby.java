@@ -57,8 +57,8 @@ public class Lobby {
         Map<String, PlayerID> playerIdMapping = new HashMap<>();
 
         ArrayList<String> playerIds = joinedUsers.stream().map(User::getUserId).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-        for(int i = 0; i < joinedUsers.size(); i++){
-            playerIdMapping.put(playerIds.get(i), PlayerID.valueOf("PLAYER" + i));
+        for(int i = 1; i < joinedUsers.size() + 1; i++){
+            playerIdMapping.put(playerIds.get(i - 1), PlayerID.valueOf("PLAYER" + i));
         }
 
         return playerIdMapping;

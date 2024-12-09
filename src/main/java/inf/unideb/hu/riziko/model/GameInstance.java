@@ -1,5 +1,6 @@
 package inf.unideb.hu.riziko.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import inf.unideb.hu.riziko.model.actions.Combat;
 import inf.unideb.hu.riziko.model.loader.MapLoader;
 import inf.unideb.hu.riziko.model.map.Territory;
@@ -30,6 +31,7 @@ public class GameInstance {
     @Getter
     private Turn currentTurn;
     @Getter
+    @JsonIgnore
     private CardDeck territoryCardDeck;
 
     public Integer getPlayerCount() {
@@ -54,7 +56,6 @@ public class GameInstance {
         players = new ArrayList<Player>();
         for (int i = 0; i < playerCount; i++) {
             addPlayer();
-            System.out.println(players);
         }
         currentTurn = new Turn(PlayerID.PLAYER1);
 

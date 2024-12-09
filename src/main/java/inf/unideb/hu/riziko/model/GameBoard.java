@@ -1,5 +1,6 @@
 package inf.unideb.hu.riziko.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import inf.unideb.hu.riziko.datastructures.UnorderedPair;
 import inf.unideb.hu.riziko.model.map.Continent;
 import inf.unideb.hu.riziko.model.map.Territory;
@@ -28,6 +29,7 @@ public class GameBoard {
     @Getter
     private final HashSet<Continent> continents;
     @Getter
+    @JsonIgnore
     private final HashSet<UnorderedPair<String>> adjacencies;
 
     public GameBoard(HashMap<String, Territory> territories,  HashSet<Continent> continents, HashSet<UnorderedPair<String>> adjacencies) {

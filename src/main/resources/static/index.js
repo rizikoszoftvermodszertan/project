@@ -22,6 +22,9 @@ const startGameButton = document.getElementById("startGame")
 const error = document.getElementById("errors")
 const partyMenu = document.getElementById("partyMenu")
 
+const gameUI = document.getElementById("game")
+const playerTurnSpan = document.getElementById("playerturn")
+
 //Itt kezeljük ha a server frissítésre késztet.
 sockJs.onmessage = function (e) {
     console.log("socketmessage:", e.data)
@@ -34,13 +37,15 @@ sockJs.onmessage = function (e) {
 
 async function updateUI(){
     var lobby = await getLobby()
-    if(lobby.gameStarted){
-        closeMenuUI()
+    console.log(lobby)
+    if(lobby.started === false){
+        openMenuUI()
         updatePartyUI()
         return
     }
-    refreshGameState()
-    updateGameUI()
+    closeMenuUI()
+    await refreshGameState()
+    await updateGameUI()
 }
 
 async function getLobby(){
@@ -59,13 +64,8 @@ async function getLobby(){
 
 async function getGame(){
     try {
-        const url = baseUrl + "/lobby/" + lobbyId + "/game"
-        const response = await fetch(url)
-
-        if (!response.ok) {
-            throw new Error(response.status)
-        }
-        return response.json()
+        var lobby = await getLobby()
+        return lobby.gameInstance
     } catch (e) {
         console.log(e)
     }
@@ -93,10 +93,12 @@ function closePartyUI(){
 
 function closeMenuUI(){
     partyMenu.hidden = true;
+    gameUI.hidden = false;
 }
 
 function openMenuUI(){
     partyMenu.hidden = false;
+    gameUI.hidden = true;
 }
 
 //A parti táblázátot állítja, illetve az aktív gombokat/inputokat
@@ -150,7 +152,9 @@ async function updatePartyUI() {
 
     if(isLeader){
         gameModeSelect.disabled = false;
-        startGameButton.disabled = false;
+        if(lobby.size >= 2 && lobby.size <= 6) {
+            startGameButton.disabled = false;
+        }
 
         const kickButtons = document.getElementsByClassName("kickButton")
         for(let i = 0; i < kickButtons.length; i++) {
@@ -264,18 +268,18 @@ const nodes = await d3.json("territories.json");
 //var continents = await d3.json("continents.json")
 
 const colorMapping = {
-    "neutral":"grey",
-    "1":"red",
-    "2":"blue",
-    "3":"green",
-    "4":"brown",
-    "5":"purple",
-    "6":"orange"
+    "NEUTRAL":"grey",
+    "PLAYER1":"red",
+    "PLAYER2":"blue",
+    "PLAYER3":"green",
+    "PLAYER4":"brown",
+    "PLAYER5":"purple",
+    "PLAYER6":"orange"
 }
 
 var board = []
 nodes.forEach((e) => {
-    board.push({id: e.Id, coords: e.coords, units: 0, owner: e.owner})
+    board.push({id: e.Id, coords: e.coords, units: 0, owner: e.owner, name:e.Name})
 })
 
 const height = document.getElementsByTagName("svg")[0].height.baseVal.value
@@ -287,13 +291,14 @@ var selected = []
 
 async function refreshGameState(){
     game = await getGame()
+
     thisPlayerID = game.players[user.userId]
     if(isDeploymentPhase() && isYourTurn()){
         deployableUnits = 10
     }
     board.forEach((row)=>{
-        const owner = game.territories[row.name].owner
-        const armyCount = game.territories[row.name].armyCount
+        const owner = game.gameBoard.territories[row.name].owner
+        const armyCount = game.gameBoard.territories[row.name].armyCount
 
         const i = board.findIndex( (e) => e.name === row.name)
         board[i].owner = owner
@@ -306,6 +311,19 @@ async function refreshGameState(){
 async function updateGameUI() {
     const svg = d3.select("svg")
 
+    const lobby = await getLobby()
+    const currentState = lobby.gameInstance.currentTurn.currentState
+
+    const playernamemap = []
+    lobby.joinedUsers.forEach((e) => {
+        playernamemap.push({name: e.name, userId: e.userId, player: lobby.players[e.userId]})
+    })
+    console.log(playernamemap)
+    const user = playernamemap.find(e => e.player === lobby.gameInstance.currentTurn.activePlayer)
+    console.log(username)
+    playerTurnSpan.innerHTML = "Jelenleg következő játékos: " + user.name + ", állapot: " + currentState
+
+    forEach
 
     //Kiválaszott elem
     svg.selectAll(".selected").data(selected).join("circle")
