@@ -33,7 +33,6 @@ public class Turn {
         switch(this.currentState) {
             case DEPLOYMENT -> this.currentState = TurnState.ATTACK;
             case ATTACK -> this.currentState = TurnState.FORTIFY;
-            case FORTIFY -> advancePlayer();
         }
     }
 
