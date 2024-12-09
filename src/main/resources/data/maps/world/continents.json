@@ -1,7 +1,7 @@
 [
   {
     "name": "North America",
-    "territories": ["Territory_Alaska", "Territory_NWT", "Territory_Alberta", "Territory_Ontario", "Territory_Quebec", "Territory_Western_US", "Territory_Eastern_US", "Territory_Central_America"],
+    "territories": ["Territory_Alaska", "Territory_NWT", "Territory_Alberta", "Territory_Ontario", "Territory_Quebec", "Territory_Greenland","Territory_Western_US", "Territory_Eastern_US", "Territory_Central_America"],
     "armyBonus": 5
   },
   {
