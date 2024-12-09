@@ -28,6 +28,10 @@ public class Territory {
         if (this.armyCount < 0) this.armyCount = 0;
     }
 
+    public void addUnits(int count) {
+        this.armyCount += count;
+    }
+
     public int getUnitCount() {
         return this.armyCount;
     }

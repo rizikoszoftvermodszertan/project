@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class GameInstance {
     public enum GamePhase {
@@ -56,8 +57,9 @@ public class GameInstance {
         for (int i = playerCount; i > 0; i--) {
             addPlayer();
         }
-
         currentTurn = new Turn(PlayerID.PLAYER1);
+
+        gameBoard.distributeTerritories(players.stream().map(Player::getID).toList());
     }
 
     public void advanceGamePhase() {
@@ -115,7 +117,7 @@ public class GameInstance {
             gamePhase = GamePhase.FINISHED;
         }
         currentTurn.advancePlayer();
-        if (currentTurn.getActivePlayer().value() > players.size()) {
+        if (currentTurn.getActivePlayer().value() > getPlayerCount()) {
             currentTurn.resetActivePlayer();
         }
     }
