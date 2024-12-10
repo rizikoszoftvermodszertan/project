@@ -27,6 +27,8 @@ const playerTurnSpan = document.getElementById("playerturn")
 const deployUI = document.getElementById("deployphase")
 const attackUI = document.getElementById("attackphase")
 const fortifyUI = document.getElementById("fortifyphase")
+const aphaseButton = document.getElementById("aphaseButton")
+const phaseButton = document.getElementById("phaseButton")
 
 //Itt kezeljük ha a server frissítésre késztet.
 sockJs.onmessage = function (e) {
@@ -178,6 +180,28 @@ async function updatePartyUI() {
  * Kattintás események a menühöz
  */
 
+aphaseButton.addEventListener("click", async () => {
+    console.log("fasz")
+    const url = baseUrl + "/lobby/" + lobbyId + "/end";
+    const response = await fetch(url, {method: "POST"});
+    console.log("fasz")
+    if (!response.ok) {
+        console.log(response.status);
+        return;
+    }
+})
+
+phaseButton.addEventListener("click", async () => {
+    console.log("fasz")
+    const url = baseUrl + "/lobby/" + lobbyId + "/end";
+    const response = await fetch(url, {method: "POST"});
+    console.log("fasz")
+    if (!response.ok) {
+        console.log(response.status);
+        return;
+    }
+})
+
 startGameButton.addEventListener("click", async () => {
     const newGameMode = gameModeSelect.value;
     const url = baseUrl + "/lobby/" + lobbyId + "/start";
@@ -186,6 +210,7 @@ startGameButton.addEventListener("click", async () => {
         console.log(response.status);
         return;
     }
+    await refreshGameState()
 })
 
 gameModeSelect.addEventListener("change", async (e) => {
@@ -294,10 +319,11 @@ var selected = []
 
 async function refreshGameState(){
     game = await getGame()
-
-    thisPlayerID = game.players[user.userId]
+    var lobby = await getLobby()
+    thisPlayerID = lobby.players[user.userId]
     if(isDeploymentPhase() && isYourTurn()){
-        deployableUnits = game.gameInstance.players.find((e) => e.id === thisPlayerID).armyIncome
+        console.log(game)
+        deployableUnits = game.players.find((e) => e.id === thisPlayerID).armyIncome
     }
     board.forEach((row)=>{
         const owner = game.gameBoard.territories[row.name].owner
@@ -321,11 +347,10 @@ async function updateGameUI() {
     lobby.joinedUsers.forEach((e) => {
         playernamemap.push({name: e.name, userId: e.userId, player: lobby.players[e.userId]})
     })
-    console.log(playernamemap)
+
     const user = playernamemap.find(e => e.player === lobby.gameInstance.currentTurn.activePlayer)
-    console.log(username)
     playerTurnSpan.innerHTML = "Jelenleg következő játékos: " + user.name + ", állapot: " + currentState
-    console.log(thisPlayerID)
+    //console.log(isDeploymentPhase(), isYourTurn(), isDeploymentPhase() && isYourTurn())
     if(isDeploymentPhase() && isYourTurn()){
         deployUI.hidden = false
         const deploySpan = document.getElementById("deployable");
@@ -339,14 +364,14 @@ async function updateGameUI() {
         attackUI.hidden = false
     }
     else{
-        deployUI.hidden = true
+        attackUI.hidden = true
     }
 
     if(isFortifyPhase() && isYourTurn()){
         fortifyUI.hidden = false
     }
     else{
-        deployUI.hidden = true
+        fortifyUI.hidden = true
     }
 
 
@@ -391,11 +416,11 @@ async function updateGameUI() {
 }
 
 function territoryOwnedByPlayer(id){
-    return game.gameBoard.territories[board[0].name].owner === thisPlayerID
+    return board[id].owner === thisPlayerID
 }
 
 function isNeutralTerritory(id){
-    return game.gameBoard.territories[board[0].name].owner === "Neutral"
+    return board[id].owner === "Neutral"
 }
 
 function adjacentTerritories(id1, id2){
@@ -403,10 +428,9 @@ function adjacentTerritories(id1, id2){
 }
 
 var deployableUnits = 0
-
+var deployment = { deployments: []}
 
 function isDeploymentPhase(){
-    console.log("deployment", game.currentTurn.currentState === "DEPLOYMENT")
     return game.currentTurn.currentState === "DEPLOYMENT"
 }
 
@@ -420,44 +444,91 @@ function isFortifyPhase(){
 
 function isYourTurn(){
     console.log(game.currentTurn.activePlayer)
+    console.log("thisPlayerID", thisPlayerID)
+    console.log(game.currentTurn.activePlayer === thisPlayerID)
     return game.currentTurn.activePlayer === thisPlayerID
 }
 
-function boardClicked(id){
+async function boardClicked(id) {
 
-    if(!isYourTurn){
+    if (!isYourTurn) {
         return
     }
 
-    selected.push(id)
-
-    if(isDeploymentPhase() && territoryOwnedByPlayer(id)){
+    console.log(isDeploymentPhase(), territoryOwnedByPlayer(id), isDeploymentPhase() && territoryOwnedByPlayer(id))
+    if (isDeploymentPhase() && territoryOwnedByPlayer(id)) {
         board[id].units++
         deployableUnits--
+        deployment.lobbyID = lobbyId
+        deployment.userID = user.userId
+        if (!deployment.deployments.find((e) => e.deploy === board[id].name)) {
+            deployment.deployments.push({deploy: board[id].name, amount: 1})
+        } else {
+            const i = deployment.deployments.findIndex((e) => e.deploy === board[id].name)
+            deployment.deployments[i].amount++
+        }
+        console.log(deployment)
+        if (deployableUnits <= 0) {
+            const url = baseUrl + "/game/deploy"
+            const response = await fetch(url, {method: "POST", body: JSON.stringify(deployment), headers: {
+                    "Content-Type": "application/json",
+                }})
 
-        if(deployableUnits == 0){
-            //Állapot küldése a szervernek
+            if (!response.ok) {
+                throw new Error(response.status)
+            }
+            deployment = {deployments: []}
             refreshGameState()
         }
         selected = []
         updateGameUI()
         return;
     }
-
-    if(selected.length < 2){
+    selected.push(id)
+    if (selected.length < 2) {
         return
     }
 
-    if(isAttackPhase()){
+    if (isAttackPhase() && territoryOwnedByPlayer(selected[0]) && !territoryOwnedByPlayer(selected[1])
+        && board[selected[0]].units > 1) {
         //Támadás selected[0]-ról selected[1]re
+        var combat  = {}
+        combat.lobbyID = lobbyId
+        combat.userID = user.userId
+        combat.from = board[selected[0]].name
+        combat.to = board[selected[1]].name
+        const url = baseUrl + "/game/combat"
+        const response = await fetch(url, {method: "POST", body: JSON.stringify(combat), headers: {
+                "Content-Type": "application/json",
+            }})
+
+        if (!response.ok) {
+            throw new Error(response.status)
+        }
+
+        refreshGameState()
         selected = []
         return
     }
 
-    if(isFortifyPhase()){
+    if (isFortifyPhase() && territoryOwnedByPlayer(selected[0]) && territoryOwnedByPlayer(selected[1])) {
         selected = []
-        return
+        var fortify = {}
+        fortify.lobbyID = lobbyId
+        fortify.userID = user.userId
+        fortify.from = board[selected[0]].name
+        fortify.to = board[selected[1]].name
+        fortify.amount = 1
+        const url = baseUrl + "/game/fortify"
+        const response = await fetch(url, {method: "POST", body: JSON.stringify(fortify), headers: {
+                "Content-Type": "application/json",
+            }})
+
+        if (!response.ok) {
+            throw new Error(response.status)
+        }
+
+        refreshGameState()
     }
 
-    updateGameUI()
 }

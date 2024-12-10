@@ -5,6 +5,7 @@ import inf.unideb.hu.riziko.model.actions.Combat;
 import inf.unideb.hu.riziko.model.loader.MapLoader;
 import inf.unideb.hu.riziko.model.map.Territory;
 import inf.unideb.hu.riziko.requests.DeployRequest;
+import inf.unideb.hu.riziko.requests.Deployment;
 import lombok.Getter;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -154,7 +155,7 @@ public class GameInstance {
         gameBoard.findTerritoryByName(destination).addUnits(armyCount);
     }
 
-    public void deploy(List<DeployRequest.Deployment> deployments) {
+    public void deploy(List<Deployment> deployments) {
         deployments.forEach((deployment) -> {
             String to = deployment.getDeploy();
             int amount = deployment.getAmount();
@@ -171,6 +172,13 @@ public class GameInstance {
         currentTurn.advancePlayer();
         if (currentTurn.getActivePlayer().value() > getPlayerCount()) {
             currentTurn.resetActivePlayer();
+        }
+    }
+
+    public void endTurnPhase(){
+        switch (currentTurn.getCurrentState()) {
+            case DEPLOYMENT, ATTACK -> currentTurn.advanceTurnState();
+            case FORTIFY -> concludeTurn();
         }
     }
 

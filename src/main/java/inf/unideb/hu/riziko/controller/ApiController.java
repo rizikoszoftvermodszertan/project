@@ -69,14 +69,15 @@ public class ApiController {
             return ResponseEntity.badRequest().body("Game is not found or started yet");
         }
 
-        String attacker=request.getAttackingterritoryname();
-        String defender=request.getDefendingterritoryname();
+        String attacker=request.getFrom();
+        String defender=request.getTo();
         if(attacker==null||defender==null)
         {
             System.out.println("attackingterritoryname or defendingterritoryname is null");
             return ResponseEntity.badRequest().body("attackingterritoryname or defendingterritoryname is null");
         }
         gameInstance.attack(attacker, defender);
+        lobbyRepository.sendUpdateToLobbyMembers(lobbyRepository.getLobby(request.getLobbyID()));
         return ResponseEntity.ok().body("Combat resolved");
 
 
@@ -84,7 +85,9 @@ public class ApiController {
 
     @PostMapping("/lobby/{lobbyId}/end")
     public void endPhase(@PathVariable String lobbyId){
-        lobbyRepository.getLobby(lobbyId).getGameInstance().getCurrentTurn().advanceTurnState();
+        System.out.println(lobbyId + " ended");
+        lobbyRepository.getLobby(lobbyId).getGameInstance().endTurnPhase();
+        lobbyRepository.sendUpdateToLobbyMembers(lobbyRepository.getLobby(lobbyId));
     }
 
     @PostMapping("/game/fortify")
@@ -106,6 +109,7 @@ public class ApiController {
         }
 
         gameInstance.fortify(origin, destination, amount);
+        lobbyRepository.sendUpdateToLobbyMembers(lobbyRepository.getLobby(request.getLobbyID()));
         return ResponseEntity.ok().body("Fortify resolved");
     }
 
@@ -119,7 +123,7 @@ public class ApiController {
             return ResponseEntity.badRequest().body("Game is not found or started yet");
         }
         gameInstance.deploy(request.getDeployments());
-
+        lobbyRepository.sendUpdateToLobbyMembers(lobbyRepository.getLobby(request.getLobbyID()));
 
         return ResponseEntity.ok().body("Deploy resolved");
     }

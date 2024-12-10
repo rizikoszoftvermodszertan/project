@@ -6,7 +6,7 @@ import lombok.Setter;
 public class CombatRequest extends BaseRequest {
 
     @Getter @Setter
-    private String attackingterritoryname;
+    private String from;
     @Getter @Setter
-    private String defendingterritoryname;
+    private String to;
 }
