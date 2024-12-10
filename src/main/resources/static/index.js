@@ -24,6 +24,9 @@ const partyMenu = document.getElementById("partyMenu")
 
 const gameUI = document.getElementById("game")
 const playerTurnSpan = document.getElementById("playerturn")
+const deployUI = document.getElementById("deployphase")
+const attackUI = document.getElementById("attackphase")
+const fortifyUI = document.getElementById("fortifyphase")
 
 //Itt kezeljük ha a server frissítésre késztet.
 sockJs.onmessage = function (e) {
@@ -294,7 +297,7 @@ async function refreshGameState(){
 
     thisPlayerID = game.players[user.userId]
     if(isDeploymentPhase() && isYourTurn()){
-        deployableUnits = 10
+        deployableUnits = game.gameInstance.players.find((e) => e.id === thisPlayerID).armyIncome
     }
     board.forEach((row)=>{
         const owner = game.gameBoard.territories[row.name].owner
@@ -322,8 +325,30 @@ async function updateGameUI() {
     const user = playernamemap.find(e => e.player === lobby.gameInstance.currentTurn.activePlayer)
     console.log(username)
     playerTurnSpan.innerHTML = "Jelenleg következő játékos: " + user.name + ", állapot: " + currentState
+    console.log(thisPlayerID)
+    if(isDeploymentPhase() && isYourTurn()){
+        deployUI.hidden = false
+        const deploySpan = document.getElementById("deployable");
+        deploySpan.innerHTML = deployableUnits
+    }
+    else{
+        deployUI.hidden = true
+    }
 
-    forEach
+    if(isAttackPhase() && isYourTurn()){
+        attackUI.hidden = false
+    }
+    else{
+        deployUI.hidden = true
+    }
+
+    if(isFortifyPhase() && isYourTurn()){
+        fortifyUI.hidden = false
+    }
+    else{
+        deployUI.hidden = true
+    }
+
 
     //Kiválaszott elem
     svg.selectAll(".selected").data(selected).join("circle")
@@ -373,10 +398,15 @@ function isNeutralTerritory(id){
     return game.gameBoard.territories[board[0].name].owner === "Neutral"
 }
 
+function adjacentTerritories(id1, id2){
+    return true
+}
+
 var deployableUnits = 0
 
 
 function isDeploymentPhase(){
+    console.log("deployment", game.currentTurn.currentState === "DEPLOYMENT")
     return game.currentTurn.currentState === "DEPLOYMENT"
 }
 
@@ -389,6 +419,7 @@ function isFortifyPhase(){
 }
 
 function isYourTurn(){
+    console.log(game.currentTurn.activePlayer)
     return game.currentTurn.activePlayer === thisPlayerID
 }
 

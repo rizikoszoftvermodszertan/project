@@ -60,6 +60,8 @@ public class GameInstance {
         currentTurn = new Turn(PlayerID.PLAYER1);
 
         gameBoard.distributeTerritories(players.stream().map(Player::getID).collect(Collectors.toCollection(ArrayList::new)));
+        advanceGamePhase();
+        calculatePlayerIncomes();
     }
 
     public void startGame() {
@@ -165,7 +167,7 @@ public class GameInstance {
         if (checkIfGameOver()) {
             gamePhase = GamePhase.FINISHED;
         }
-
+        calculatePlayerIncomes();
         currentTurn.advancePlayer();
         if (currentTurn.getActivePlayer().value() > getPlayerCount()) {
             currentTurn.resetActivePlayer();
