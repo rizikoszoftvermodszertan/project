@@ -19,12 +19,12 @@
 
     </table>
     <div id="gameModeMenu" hidden>
-        <label for="gameModeSelect"></label>
+        <!--<label for="gameModeSelect"></label>
         <select id="gameModeSelect" disabled>
             <option value="WORLD_DOMINATION" selected>World Domination</option>
             <option value="CAPITAL">Capital</option>
             <option value="SECRET_MISSION">Titkos küldetés</option>
-        </select>
+        </select>-->
         <button id="startGame" disabled>Játék indítása</button>
     </div>
 </div>
@@ -37,19 +37,25 @@
     <p></p>
     <span id="playerturn"></span>
     <div id="deployphase" hidden>
-        <p>Egységlerakás fázis Hátralévő egységek:</p>
+        <p>Rakd le az új egységeidet! Hátralévő egységek:</p>
         <span id="deployable"></span>
     </div>
     <div id="attackphase" hidden>
-        <p>Támadási fázis</p>
+        <p>Támadj!</p>
         <button id="aphaseButton">Támadás vége</button>
     </div>
     <div id="fortifyphase" hidden>
-        <p>Megerősítési fázis</p>
+        <p>Erősítsd meg a területeidet!</p>
         <button id="phaseButton">Erősítés vége</button>
     </div>
     <div>
+        <p>Játékosok listája:</p>
         <ul id="playerList">
+
+        </ul>
+    </div>
+    <div>
+        <ul id="combatList">
 
         </ul>
     </div>

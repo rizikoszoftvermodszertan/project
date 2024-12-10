@@ -29,10 +29,12 @@ const attackUI = document.getElementById("attackphase")
 const fortifyUI = document.getElementById("fortifyphase")
 const aphaseButton = document.getElementById("aphaseButton")
 const phaseButton = document.getElementById("phaseButton")
+const playerList = document.getElementById("playerList")
+const combatList = document.getElementById("combatList")
 
 //Itt kezeljük ha a server frissítésre késztet.
 sockJs.onmessage = function (e) {
-    console.log("socketmessage:", e.data)
+    console.log("socket", e.data)
     switch (e.data){
         case 'updatelobby':
             updateUI()
@@ -42,7 +44,7 @@ sockJs.onmessage = function (e) {
 
 async function updateUI(){
     var lobby = await getLobby()
-    console.log(lobby)
+    console.log("updatedFromServer", lobby)
     if(lobby.started === false){
         openMenuUI()
         updatePartyUI()
@@ -114,7 +116,6 @@ async function updatePartyUI() {
     }
 
     var lobby = await getLobby()
-    console.log("getPartyResponse:", JSON.stringify(lobby));
 
     if(!isUserInsideLobby(lobby)){
         closePartyUI()
@@ -128,7 +129,7 @@ async function updatePartyUI() {
     joinPartyButton.disabled = true;
     leavePartyButton.disabled = false;
     gameModeMenu.hidden = false;
-    gameModeSelect.disabled = true;
+    //gameModeSelect.disabled = true;
     startGameButton.disabled = true;
 
     const isLeader = user.userId === lobby.leader.userId
@@ -145,6 +146,7 @@ async function updatePartyUI() {
 
     })
 
+    /*
     const options = gameModeSelect.getElementsByTagName("option")
     const gameMode = lobby.gameMode
     for(let i = 0; i < options.length; i++){
@@ -152,11 +154,11 @@ async function updatePartyUI() {
             console.log(gameMode)
             options[i].selected = true;
         }
-    }
+    }*/
 
 
     if(isLeader){
-        gameModeSelect.disabled = false;
+        //gameModeSelect.disabled = false;
         if(lobby.size >= 2 && lobby.size <= 6) {
             startGameButton.disabled = false;
         }
@@ -181,10 +183,8 @@ async function updatePartyUI() {
  */
 
 aphaseButton.addEventListener("click", async () => {
-    console.log("fasz")
     const url = baseUrl + "/lobby/" + lobbyId + "/end";
     const response = await fetch(url, {method: "POST"});
-    console.log("fasz")
     if (!response.ok) {
         console.log(response.status);
         return;
@@ -192,10 +192,8 @@ aphaseButton.addEventListener("click", async () => {
 })
 
 phaseButton.addEventListener("click", async () => {
-    console.log("fasz")
     const url = baseUrl + "/lobby/" + lobbyId + "/end";
     const response = await fetch(url, {method: "POST"});
-    console.log("fasz")
     if (!response.ok) {
         console.log(response.status);
         return;
@@ -203,7 +201,6 @@ phaseButton.addEventListener("click", async () => {
 })
 
 startGameButton.addEventListener("click", async () => {
-    const newGameMode = gameModeSelect.value;
     const url = baseUrl + "/lobby/" + lobbyId + "/start";
     const response = await fetch(url, {method: "POST"});
     if (!response.ok) {
@@ -212,12 +209,12 @@ startGameButton.addEventListener("click", async () => {
     }
     await refreshGameState()
 })
-
+/*
 gameModeSelect.addEventListener("change", async (e) => {
     const newGameMode = gameModeSelect.value;
     const url = baseUrl + "/lobby/" + lobbyId + "/gamemode";
     const response = await fetch(url, {method: "POST", body: gameModeSelect.value});
-})
+})*/
 
 createUserButton.addEventListener("click", async () => {
     const username = usernameInput.value;
@@ -348,8 +345,13 @@ async function updateGameUI() {
         playernamemap.push({name: e.name, userId: e.userId, player: lobby.players[e.userId]})
     })
 
+    combatList.innerHTML = ""
+    game.combatMessages.forEach((e) => {
+        combatList.innerHTML += "<li>" + e + "</li>"
+    })
+
     const user = playernamemap.find(e => e.player === lobby.gameInstance.currentTurn.activePlayer)
-    playerTurnSpan.innerHTML = "Jelenleg következő játékos: " + user.name + ", állapot: " + currentState
+    playerTurnSpan.innerHTML = "Jelenleg következő játékos: " + user.name + ", fázis: " + currentState
     //console.log(isDeploymentPhase(), isYourTurn(), isDeploymentPhase() && isYourTurn())
     if(isDeploymentPhase() && isYourTurn()){
         deployUI.hidden = false
@@ -374,6 +376,10 @@ async function updateGameUI() {
         fortifyUI.hidden = true
     }
 
+    playerList.innerHTML = ""
+    playernamemap.forEach((player)=>{
+        playerList.innerHTML += "<li style='color: " + colorMapping[player.player] + "'>"+ player.name + "</li>"
+    })
 
     //Kiválaszott elem
     svg.selectAll(".selected").data(selected).join("circle")
@@ -395,8 +401,8 @@ async function updateGameUI() {
         .attr("id", d => d.id)
         .style("stroke", "black")
         .style("fill", d => colorMapping[d.owner])
-        .on("click", (e) => {
-            boardClicked(e.target.id)
+        .on("click", async (e) => {
+            await boardClicked(e.target.id)
         })
 
     //Egységek száma
@@ -409,8 +415,8 @@ async function updateGameUI() {
         .style("fill", "white")
         .attr("id", d => d.id)
         .text(d => d.units)
-        .on("click", (e) => {
-            boardClicked(e.target.id)
+        .on("click", async (e) => {
+            await boardClicked(e.target.id)
         })
 
 }
@@ -443,92 +449,96 @@ function isFortifyPhase(){
 }
 
 function isYourTurn(){
-    console.log(game.currentTurn.activePlayer)
-    console.log("thisPlayerID", thisPlayerID)
-    console.log(game.currentTurn.activePlayer === thisPlayerID)
     return game.currentTurn.activePlayer === thisPlayerID
 }
 
 async function boardClicked(id) {
 
-    if (!isYourTurn) {
-        return
-    }
+    if (isYourTurn() === true) {
 
-    console.log(isDeploymentPhase(), territoryOwnedByPlayer(id), isDeploymentPhase() && territoryOwnedByPlayer(id))
-    if (isDeploymentPhase() && territoryOwnedByPlayer(id)) {
-        board[id].units++
-        deployableUnits--
-        deployment.lobbyID = lobbyId
-        deployment.userID = user.userId
-        if (!deployment.deployments.find((e) => e.deploy === board[id].name)) {
-            deployment.deployments.push({deploy: board[id].name, amount: 1})
-        } else {
-            const i = deployment.deployments.findIndex((e) => e.deploy === board[id].name)
-            deployment.deployments[i].amount++
+        if (isDeploymentPhase() && territoryOwnedByPlayer(id)) {
+            board[id].units++
+            deployableUnits--
+            deployment.lobbyID = lobbyId
+            deployment.userID = user.userId
+            if (!deployment.deployments.find((e) => e.deploy === board[id].name)) {
+                deployment.deployments.push({deploy: board[id].name, amount: 1})
+            } else {
+                const i = deployment.deployments.findIndex((e) => e.deploy === board[id].name)
+                deployment.deployments[i].amount++
+            }
+            console.log(deployment)
+            if (deployableUnits <= 0) {
+                const url = baseUrl + "/game/deploy"
+                const response = await fetch(url, {
+                    method: "POST", body: JSON.stringify(deployment), headers: {
+                        "Content-Type": "application/json",
+                    }
+                })
+
+                if (!response.ok) {
+                    throw new Error(response.status)
+                }
+                deployment = {deployments: []}
+                refreshGameState()
+            }
+            updateGameUI()
         }
-        console.log(deployment)
-        if (deployableUnits <= 0) {
-            const url = baseUrl + "/game/deploy"
-            const response = await fetch(url, {method: "POST", body: JSON.stringify(deployment), headers: {
+        //console.log(isAttackPhase(), !territoryOwnedByPlayer(id), isAttackPhase() && !territoryOwnedByPlayer(id))
+        else if ((isAttackPhase() || isFortifyPhase()) && selected && territoryOwnedByPlayer(id) && !selected[0]) {
+            console.log("firstSelect")
+            selected[0] = id
+        }
+        else if(isAttackPhase() && selected[0] && !territoryOwnedByPlayer(id)){
+            //Támadás selected[0]-ról selected[1]re
+            console.log("tamadas")
+            var combat = {}
+            combat.lobbyID = lobbyId
+            combat.userID = user.userId
+            combat.from = board[selected[0]].name
+            combat.to = board[id].name
+            console.log(combat)
+            const url = baseUrl + "/game/combat"
+            const response = await fetch(url, {
+                method: "POST", body: JSON.stringify(combat), headers: {
                     "Content-Type": "application/json",
-                }})
+                }
+            })
 
             if (!response.ok) {
                 throw new Error(response.status)
             }
-            deployment = {deployments: []}
+
             refreshGameState()
+            selected = []
         }
-        selected = []
+        else if(isFortifyPhase() && selected[0] && territoryOwnedByPlayer(id)){
+            console.log("fortify")
+            var fortify = {}
+            fortify.lobbyID = lobbyId
+            fortify.userID = user.userId
+            fortify.from = board[selected[0]].name
+            fortify.to = board[id].name
+            fortify.amount = 1
+            const url = baseUrl + "/game/fortify"
+            const response = await fetch(url, {
+                method: "POST", body: JSON.stringify(fortify), headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+
+            if (!response.ok) {
+                throw new Error(response.status)
+            }
+
+            refreshGameState()
+            selected = []
+        }
+        else{
+            console.log("else ag")
+            selected = []
+
+        }
         updateGameUI()
-        return;
     }
-    selected.push(id)
-    if (selected.length < 2) {
-        return
-    }
-
-    if (isAttackPhase() && territoryOwnedByPlayer(selected[0]) && !territoryOwnedByPlayer(selected[1])
-        && board[selected[0]].units > 1) {
-        //Támadás selected[0]-ról selected[1]re
-        var combat  = {}
-        combat.lobbyID = lobbyId
-        combat.userID = user.userId
-        combat.from = board[selected[0]].name
-        combat.to = board[selected[1]].name
-        const url = baseUrl + "/game/combat"
-        const response = await fetch(url, {method: "POST", body: JSON.stringify(combat), headers: {
-                "Content-Type": "application/json",
-            }})
-
-        if (!response.ok) {
-            throw new Error(response.status)
-        }
-
-        refreshGameState()
-        selected = []
-        return
-    }
-
-    if (isFortifyPhase() && territoryOwnedByPlayer(selected[0]) && territoryOwnedByPlayer(selected[1])) {
-        selected = []
-        var fortify = {}
-        fortify.lobbyID = lobbyId
-        fortify.userID = user.userId
-        fortify.from = board[selected[0]].name
-        fortify.to = board[selected[1]].name
-        fortify.amount = 1
-        const url = baseUrl + "/game/fortify"
-        const response = await fetch(url, {method: "POST", body: JSON.stringify(fortify), headers: {
-                "Content-Type": "application/json",
-            }})
-
-        if (!response.ok) {
-            throw new Error(response.status)
-        }
-
-        refreshGameState()
-    }
-
 }

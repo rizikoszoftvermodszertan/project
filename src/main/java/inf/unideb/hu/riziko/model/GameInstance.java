@@ -32,6 +32,8 @@ public class GameInstance {
     @Getter
     private Turn currentTurn;
     @Getter
+    private List<String> combatMessages = new ArrayList<>();
+    @Getter
     @JsonIgnore
     private CardDeck territoryCardDeck;
 
@@ -125,16 +127,20 @@ public class GameInstance {
         if (currentTurn.currentState != Turn.TurnState.ATTACK) return;
         if (gameBoard.findTerritoryByName(attacker).getOwner() == gameBoard.findTerritoryByName(defender).getOwner()){
             gameLogger.error(attacker + " és " + defender + " területet ugyanaz irányítja!");
+            System.out.println("Saját terület");
             return;
         }
         if (!gameBoard.isAdjacent(attacker, defender)) {
             gameLogger.error(attacker + " és " + defender + " nem szomszédosak!");
+            System.out.println("Nem szomszédos");
             return;
         }
+        System.out.println("Harc");
         Combat combat = new Combat(gameBoard.findTerritoryByName(attacker), gameBoard.findTerritoryByName(defender));
         combat.resolveCombat();
         gameBoard.updateTerritory(attacker, combat.getAttackingTerritory());
         gameBoard.updateTerritory(defender, combat.getDefendingTerritory());
+        combatMessages = combat.getMessage();
     }
 
     public void fortify(String origin, String destination, Integer armyCount) {
@@ -168,6 +174,7 @@ public class GameInstance {
         if (checkIfGameOver()) {
             gamePhase = GamePhase.FINISHED;
         }
+        combatMessages = new ArrayList<>();
         calculatePlayerIncomes();
         currentTurn.advancePlayer();
         if (currentTurn.getActivePlayer().value() > getPlayerCount()) {
