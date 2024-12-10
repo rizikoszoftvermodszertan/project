@@ -24,6 +24,8 @@ public class GameInstance {
     @Getter
     private GamePhase gamePhase;
     @Getter
+    private String winner;
+    @Getter
     private final GameMode gameMode;
     @Getter
     private final GameBoard gameBoard;
@@ -91,7 +93,17 @@ public class GameInstance {
         // Új kártya húzása, ha van még a pakliban és a játékos megteheti
         if (territoryCardDeck.hasCards() && currentPlayer.hasTakenTerritory()) {
             TerritoryCard newCard = territoryCardDeck.drawCard();
-            currentPlayer.addCard(newCard);
+            currentPlayer.setTakenTerritory(false);
+            players.stream()
+                    .filter(player -> player.getID() == currentTurn.getActivePlayer())
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Nincs aktív játékos a körben."))
+                    .setTakenTerritory(false);
+            players.stream()
+                    .filter(player -> player.getID() == currentTurn.getActivePlayer())
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Nincs aktív játékos a körben."))
+                    .addCard(newCard);
             gameLogger.info(currentPlayer.getID() + " új kártyája: " + newCard.toString());
         } else {
             gameLogger.info("Húzni próbált " + currentPlayer.getID() + " de a pakli üres");
@@ -102,6 +114,7 @@ public class GameInstance {
             List<TerritoryCard> cardsToRedeem = currentPlayer.checkForRedeemableCards();
             if (!cardsToRedeem.isEmpty()) {
                 int bonusUnits = currentPlayer.redeemCards(cardsToRedeem);
+                currentPlayer.IncreaseArmySize(bonusUnits);
                 System.out.println("Beváltott egységek száma: " + bonusUnits);
             } else {
                 System.out.println("Nincs beváltható kártyakombináció.");
@@ -138,6 +151,12 @@ public class GameInstance {
         System.out.println("Harc");
         Combat combat = new Combat(gameBoard.findTerritoryByName(attacker), gameBoard.findTerritoryByName(defender));
         combat.resolveCombat();
+        if(combat.isSuccessful()){
+            players.stream()
+                    .filter(player -> player.getID() == currentTurn.getActivePlayer())
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Nincs aktív játékos a körben.")).setTakenTerritory(true);
+        }
         gameBoard.updateTerritory(attacker, combat.getAttackingTerritory());
         gameBoard.updateTerritory(defender, combat.getDefendingTerritory());
         combatMessages = combat.getMessage();
@@ -180,6 +199,12 @@ public class GameInstance {
         if (currentTurn.getActivePlayer().value() > getPlayerCount()) {
             currentTurn.resetActivePlayer();
         }
+        if(checkIfGameOver()){
+            winner = currentTurn.activePlayer.name();
+            advanceGamePhase();
+            return;
+        }
+        startTurn();
     }
 
     public void endTurnPhase(){

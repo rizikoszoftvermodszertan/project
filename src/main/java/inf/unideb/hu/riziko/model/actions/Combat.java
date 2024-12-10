@@ -14,6 +14,8 @@ public class Combat {
     private Territory attackingTerritory;
     @Getter
     private Territory defendingTerritory;
+    @Getter
+    private boolean successful;
 
     @Getter
     private List<String> message = new ArrayList<>();
@@ -53,6 +55,7 @@ public class Combat {
 
         if (defendingTerritory.getUnitCount() <= 0) {
             //System.out.println("Defending territory conquered!");
+            successful = true;
             message.add("Defending territory conquered!");
             defendingTerritory.setOwner(attackingTerritory.getOwner());
             defendingTerritory.setArmyCount(attackerDiceCount);

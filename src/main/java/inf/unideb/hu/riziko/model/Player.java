@@ -2,10 +2,7 @@ package inf.unideb.hu.riziko.model;
 
 import inf.unideb.hu.riziko.model.map.Territory;
 import inf.unideb.hu.riziko.model.TerritoryCard.CardDesign;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +11,11 @@ import java.util.List;
  * Játékos. Rendelkezik ID-val, játékmód szerint titkos küldetéssel vagy főhadiszállással, illetve kártyákkal.
  */
 @ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Player {
     @Getter
     @NonNull
+    @EqualsAndHashCode.Include
     private final PlayerID ID;
     @Getter
     private final Territory HQLocation; //Csak a Capital játékmódban!

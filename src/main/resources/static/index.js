@@ -31,6 +31,8 @@ const aphaseButton = document.getElementById("aphaseButton")
 const phaseButton = document.getElementById("phaseButton")
 const playerList = document.getElementById("playerList")
 const combatList = document.getElementById("combatList")
+const cardList = document.getElementById("cardList")
+const winner = document.getElementById("winner")
 
 //Itt kezeljük ha a server frissítésre késztet.
 sockJs.onmessage = function (e) {
@@ -52,7 +54,14 @@ async function updateUI(){
     }
     closeMenuUI()
     await refreshGameState()
-    await updateGameUI()
+    if(game.gamePhase === "FINISHED"){
+        winner.hidden = false
+        winner.innerHTML = "Győztes" + game.winner
+    }
+    else{
+        await updateGameUI()
+    }
+
 }
 
 async function getLobby(){
@@ -381,6 +390,12 @@ async function updateGameUI() {
         playerList.innerHTML += "<li style='color: " + colorMapping[player.player] + "'>"+ player.name + "</li>"
     })
 
+    cardList.innerHTML = ""
+    const player = game.players.find((e) => e.id === thisPlayerID)
+    player.cards.forEach((card)=>{
+        cardList.innerHTML += "<li>"+card.design +", "+ card.territoryID + "</li>"
+    })
+
     //Kiválaszott elem
     svg.selectAll(".selected").data(selected).join("circle")
         .attr("class", "selected")
@@ -423,14 +438,6 @@ async function updateGameUI() {
 
 function territoryOwnedByPlayer(id){
     return board[id].owner === thisPlayerID
-}
-
-function isNeutralTerritory(id){
-    return board[id].owner === "Neutral"
-}
-
-function adjacentTerritories(id1, id2){
-    return true
 }
 
 var deployableUnits = 0
